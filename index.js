@@ -3,9 +3,10 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import { config } from "dotenv";
-config();
 import { default as allRouter } from "./routes/index.js";
-import {} from "./aws/s3/index.js";
+import { genMyKeys } from "./keys/key_management.js";
+config();
+await genMyKeys()
 const app = express();
 const server = http.createServer(app);
 app.use(cors());
