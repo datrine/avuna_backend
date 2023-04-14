@@ -5,11 +5,11 @@ export default function (regObj) {
   let {
     email,
     password,
-    f_name,
+    f_name="",
     l_name="",
     age_range,
     sex,
-    country,
+    country="Nigeria",
     referral_code,
   } = regObj;
   if (!email) {
