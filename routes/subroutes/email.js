@@ -25,7 +25,7 @@ router.get("/send", async (req, res, next) => {
   }
 });
 
-router.get("/generate/token", async (req, res, next) => {
+router.get("/verification/token/generate", async (req, res, next) => {
   try {
     let { email } = req.query;
     let account = await getAccountByEmailAddress(email);
@@ -38,7 +38,7 @@ router.get("/generate/token", async (req, res, next) => {
   }
 });
 
-router.get("/verify/token", async (req, res, next) => {
+router.get("/verification/token/verify", async (req, res, next) => {
   try {
     let { email, token } = req.query;
     await verifyTempToken({

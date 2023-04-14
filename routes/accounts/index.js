@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { createRole, createScope } from "../../actions/index.js";
-import { authRouter, passwordRouter, } from "../subroutes/index.js";
+import { authRouter, emailRouter, passwordRouter, } from "../subroutes/index.js";
 import { getUserBioByAccountID } from "../../queries/user.js";
 const router = Router();
 
@@ -9,6 +8,10 @@ router.use(
   passwordRouter
 );
 
+router.use(
+  "/email",
+  emailRouter
+);
 router.get(
   "/me",authRouter,
   async(req,res,next)=>{
