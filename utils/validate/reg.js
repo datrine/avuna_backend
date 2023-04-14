@@ -6,7 +6,7 @@ export default function (regObj) {
     email,
     password,
     f_name,
-    l_name,
+    l_name="",
     age_range,
     sex,
     country,
@@ -24,5 +24,5 @@ export default function (regObj) {
   if (!l_name) {
     return { isValid: false, msg: "Surname not supplied" };
   }
-  return { isValid: true, regObj };
+  return { isValid: true, regObj:{...regObj,l_name:l_name.toLowerCase(),f_name:f_name.toLowerCase(),country:country.toLowerCase()} };
 }
