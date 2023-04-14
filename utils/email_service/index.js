@@ -2,16 +2,18 @@ import * as nodemailer from "nodemailer";
 import Email from "email-templates";
 import path from "path";
 import * as pug from "pug";
-
+import { config } from "dotenv";
+config();
+let {SMTP_PASSWORD,SMTP_USERNAME,SMTP_HOST,SMTP_PORT}=process.env
 let sendEmail = async ({ recipient, locals, template }) => {
   try {
     console.log({locals})
     let transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
       auth: {
-        user: "c27f8c18b9223e",
-        pass: "78a1affa8d1c3b",
+        user: SMTP_USERNAME,
+        pass: SMTP_PASSWORD,
       },
     });
     let fnSubject = pug.compileFile(
@@ -26,7 +28,7 @@ let sendEmail = async ({ recipient, locals, template }) => {
       subject,
       html,
       to: recipient,
-      from: "test@gmail.com",
+      from: "info@datrisoft.com",
     });
     /*  const email = new Email({
       message: {
