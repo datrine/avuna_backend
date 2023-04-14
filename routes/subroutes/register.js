@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { regValidator } from "../../utils/validate/index.js";
 import { createAccount, createUserBio } from "../../queries/index.js";
+import { sendEmail } from "../../utils/email_service/index.js";
 const router = Router();
 router.use("/", (req, res, next) => {
   next();
@@ -28,6 +29,12 @@ router.post("/", async (req, res, next) => {
      console.log({accountID})
      let { f_name,l_name,sex,age_range,country } = validationResponse.regObj;
      await createUserBio({accountID, f_name,l_name,sex,age_range,country})
+     
+     sendEmail({
+      recipient: email,
+      locals: {name: `${f_name} ${l_name}` },
+      template: "welcome",
+    }).then(console.log).catch(console.log);
      // process referral_code
      let { referral_code} = validationResponse.regObj;
   } catch (error) {

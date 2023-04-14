@@ -1,5 +1,6 @@
 import { addRolesToAccountMySQL, createAccountMysql, getAccountByAccountIDMySQL, getAccountMysql} from "../data/index.js";
 import bcrypt from "bcrypt";
+import { sendEmail } from "../utils/email_service/index.js";
 
 let createAccount = async (obj) => {
   try {
@@ -15,9 +16,9 @@ let createAccount = async (obj) => {
       let accountID=mysqlCreationRes?.accountID;
       addRolesToAccountMySQL({accountID,creatorID:roleCreatorID,newRoles:roles})
     }
-    
     return mysqlCreationRes;
   } catch (error) {
+    console.log(error)
     return {err:error}
   }
 };
