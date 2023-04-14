@@ -24,6 +24,7 @@ router.use("/access", accessRouter);
 router.use("/test_auth", authRouter, (req, res, next) => {
   res.json({ test: true });
 });
+router.use("/auth", authRouter);
 router.use("/", authRouter, (req, res, next) => {
   res.json({ test: true });
 });
