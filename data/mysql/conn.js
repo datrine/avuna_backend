@@ -3,6 +3,7 @@ import {v4 as  uuidV4} from "uuid";
 import {config} from "dotenv";
 config()
 let {DB_HOST,DB_USERNAME,DB_PASSWORD,DB_NAME,DB_PORT}=process.env
+
 const knex = knexJs({
   client: "mysql2",
   connection: {
@@ -163,8 +164,10 @@ knex.schema.hasTable("content").then(function (exists) {
       t.string("contentID").primary();
       t.string("courseID");
       t.string("title");
+      t.double("size");
       t.json("desc");
       t.string("contentType");
+      t.json("awsInfo");
       t.string("creatorID");
       t.enum("mode",["publish","draft"]);
       t.timestamp("createdAt").defaultTo(knex.fn.now());

@@ -111,7 +111,7 @@ const initiatePasswordChange = async ({account,}) => {
       token,
       email,
     });
-    let tokenLink=`${process.env.SERVER_URL}/api/accounts/password/recovery/change?token=${token}&email=${email}`
+    let tokenLink=`${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`
    let emailResult= await sendEmail({
       recipient: email,
       locals: { f_name,l_name,token,tokenLink },

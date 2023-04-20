@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { regValidator } from "../../utils/validate/index.js";
-import { createAccount, createUserBio } from "../../queries/index.js";
+import { createAccount, createUserBio, getAccountByEmailAddress } from "../../queries/index.js";
 import { sendEmail } from "../../utils/email_service/index.js";
+import { initiateEmailVerification } from "../../actions/account_mgt.js";
 const router = Router();
 router.use("/", (req, res, next) => {
   next();
@@ -35,6 +36,8 @@ router.post("/", async (req, res, next) => {
       locals: {name: `${f_name} ${l_name}` },
       template: "welcome",
     }).then(console.log).catch(console.log);
+    let account= await getAccountByEmailAddress(email)
+    initiateEmailVerification({account}).then(console.log).catch(console.log)
      // process referral_code
      let { referral_code} = validationResponse.regObj;
   } catch (error) {
