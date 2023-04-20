@@ -7,9 +7,6 @@ import { fileURLToPath } from "url";
 
 // snippet-start:[s3.JavaScript.buckets.getobjectV3]
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { pipeline } from "stream/promises";
-import { createReadStream } from "fs";
-import { stat } from "fs/promises";
 import { open } from "node:fs/promises";
 import path from "path";
 
