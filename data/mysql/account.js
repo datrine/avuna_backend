@@ -39,14 +39,12 @@ let getAccount = async (identifier) => {
  */
 let verifyEmail = async (email) => {
   let prom = new Promise(async (resolve, rej) => {
-    knex("login_sessions")
+    knex("accounts")
       .update({ isEmailVerified: true })
       .where({ email })
       .then((response) => {
         console.log(response);
-        let account = response[0];
-        account = { ...account, isEmailVerified: !!account.isEmailVerified };
-        resolve(account);
+        resolve({info:"Email verified"});
       })
       .catch((err) => {
         logger.log({ level: "info", message: err });
