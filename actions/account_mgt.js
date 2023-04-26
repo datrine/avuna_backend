@@ -10,8 +10,19 @@ import {
   stopLoginSession,
 } from "../queries/index.js";
 import bcrypt from "bcrypt";
-import { generateEmailToken, generatePasswordToken, getLoginTokens, saveEmailVerificationToken, savePasswordChangeToken, saveTokens } from "./token_mgt.js";
-import {  changePasswordMySQL, updateFactorInfoStateMySQL } from "../data/index.js";
+import {
+  generateEmailToken,
+  generatePasswordToken,
+  getLoginTokens,
+  saveEmailVerificationToken,
+  savePasswordChangeToken,
+  saveTokens,
+} from "./token_mgt.js";
+import {
+  changePasswordMySQL,
+  updateFactorInfoStateMySQL,
+  verifyEmailMySQL,
+} from "../data/index.js";
 import { v4 as uuidV4 } from "uuid";
 import { sendEmail } from "../utils/email_service/index.js";
 
@@ -31,20 +42,19 @@ const basicLogin = async ({ password, email }) => {
     let factors = [
       { name: "basic", activeStatus: "initialized", statusHistory: [] },
     ];
-    let clientID=uuidV4()
-    let {
-      sessID,
-    } = await createLoginSession({
-      factors,clientID,
+    let clientID = uuidV4();
+    let { sessID } = await createLoginSession({
+      factors,
+      clientID,
       accountID: account.accountID,
     });
-     await updateFactorInfoStateMySQL({
+    await updateFactorInfoStateMySQL({
       factorName: "basic",
       sessID,
       clientID,
       newFactorStatusName: "success",
     });
-    
+
     let { unverifiedFactors } = await getUnverifiedFactors({
       sessID,
       clientID,
@@ -53,96 +63,108 @@ const basicLogin = async ({ password, email }) => {
     if (unverifiedFactors?.length > 0) {
       return { unverifiedFactors, sessID, clientID };
     }
-    await startLoginSession({accountID:account.accountID,sessID,clientID})
+    await startLoginSession({ accountID: account.accountID, sessID, clientID });
     let tokens = await getLoginTokens({ sessID, clientID });
     let { accessToken, refreshToken } = tokens;
     let res = await saveTokens({ clientID, sessID, accessToken, refreshToken });
-    return { ...tokens,clientID,sessID };
+    return { ...tokens, clientID, sessID };
   } catch (error) {
     console.log(error);
     return error;
   }
 };
 
-const logout = async ({accountID,sessID,clientID }) => {
+const logout = async ({ accountID, sessID, clientID }) => {
   try {
-     await stopLoginSession({accountID,sessID,clientID});
-    return {loggedout:true}
+    await stopLoginSession({ accountID, sessID, clientID });
+    return { loggedout: true };
   } catch (error) {
     console.log(error);
     return error;
   }
 };
 
-const allSessionLogout = async ({accountID,sessID,clientID }) => {
+const allSessionLogout = async ({ accountID, sessID, clientID }) => {
   try {
-     await stopAllLoginSession({accountID,sessID,clientID});
-    return {loggedout:true}
+    await stopAllLoginSession({ accountID, sessID, clientID });
+    return { loggedout: true };
   } catch (error) {
     console.log(error);
     return error;
   }
 };
 
-const initiateEmailVerification = async ({account,}) => {
+const initiateEmailVerification = async ({ account }) => {
   try {
     let token = generateEmailToken();
-    let {email,}=account
-    let {f_name,l_name}= await getUserBioByAccountID(account.accountID)
+    let { email } = account;
+    let { f_name, l_name } = await getUserBioByAccountID(account.accountID);
     let resOf = await saveEmailVerificationToken({
       token,
       email,
     });
-    let tokenLink=`${process.env.SERVER_URL}/verify/token?token=${token}&email=${email}`
-   let emailResult= await sendEmail({
+    let tokenLink = `${process.env.SERVER_URL}/verify/token?token=${token}&email=${email}`;
+    let emailResult = await sendEmail({
       recipient: email,
-      locals: { f_name,l_name,token,tokenLink },
+      locals: { f_name, l_name, token, tokenLink },
       template: "email_verification",
     });
-    return {info:"email sent"}
+    return { info: "email sent" };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-const initiatePasswordChange = async ({account,}) => {
+const initiatePasswordChange = async ({ account }) => {
   try {
     let token = generatePasswordToken();
-    let {email,}=account
-    let {f_name,l_name}= await getUserBioByAccountID(account.accountID)
+    let { email } = account;
+    let { f_name, l_name } = await getUserBioByAccountID(account.accountID);
     let resOf = await savePasswordChangeToken({
       token,
       email,
     });
-    let tokenLink=`${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`
-   let emailResult= await sendEmail({
+    let tokenLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
+    let emailResult = await sendEmail({
       recipient: email,
-      locals: { f_name,l_name,token,tokenLink },
+      locals: { f_name, l_name, token, tokenLink },
       template: "password_recovery",
     });
-    return {info:"email sent"}
+    return { info: "email sent" };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-const completePasswordChange = async ({email,password}) => {
+const completePasswordChange = async ({ email, password }) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    changePasswordMySQL({email,pass_hash:hash});
+    changePasswordMySQL({ email, pass_hash: hash });
 
-    return {info:"Password changed"}
+    return { info: "Password changed" };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-const editProfile=async(...obj)=>{
- return await editUserBio(...obj)
-}
+const editProfile = async (...obj) => {
+  return await editUserBio(...obj);
+};
+const verifyEmail = async (email) => {
+  return await verifyEmailMySQL(email);
+};
 
-export { basicLogin ,logout,initiateEmailVerification,initiatePasswordChange,allSessionLogout,completePasswordChange,editProfile};
+export {
+  basicLogin,
+  logout,
+  initiateEmailVerification,
+  initiatePasswordChange,
+  allSessionLogout,
+  completePasswordChange,
+  editProfile,
+  verifyEmail,
+};

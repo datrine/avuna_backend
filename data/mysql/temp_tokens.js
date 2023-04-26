@@ -131,11 +131,6 @@ let verifyTempToken = async ({ token, tokenType, recipient }) => {
         .where({ token, tokenType, recipient })
         .andWhereRaw(` state is null`)
         .andWhere("expiresAt", ">", new Date())
-        .on("query-error", function (error, obj) {
-          logger.log("info", error);
-          console.log(error);
-          rej({ err: { msg: "Unknown error" } });
-        });
       console.log({ response });
       let tokenData = response[0];
       if (!tokenData) {

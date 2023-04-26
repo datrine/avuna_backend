@@ -43,16 +43,6 @@ let verifyEmail = async (email) => {
       .where({ email })
       .update({ isEmailVerified: true })
       .where({ email })
-      .on("query-error", function (error, obj) {
-        if (
-          error.code === "ER_DUP_ENTRY" ||
-          new String(error.message).toLocaleLowerCase().includes("duplicate")
-        ) {
-          return rej({ msg: "Email already taken." });
-        }
-        logger.log("info", error);
-        rej({ msg: "Unknown error" });
-      })
       .then((response) => {
         console.log(response);
         let account = response[0];
@@ -62,6 +52,7 @@ let verifyEmail = async (email) => {
       .catch((err) => {
         logger.log({ level: "info", message: err });
         //throw error;
+        rej(err)
       });
   });
   return prom;
