@@ -31,8 +31,8 @@ let verifyAccessToken = async (token) => {
         resolve(tokenData);
       })
       .catch((err) => {
-        logger.log({ level: "info", message: err });
-        //throw error;
+        console.log({ level: "info", message: err });
+        rej(err);
       });
   });
   return prom;
@@ -134,7 +134,7 @@ let verifyTempToken = async ({ token, tokenType, recipient }) => {
       console.log({ response });
       let tokenData = response[0];
       if (!tokenData) {
-      return  rej({ err: { msg: "token not valid." } });
+      return  rej({ msg: "token not valid." });
       }
       let state = "verified";
       let verifiedAt = new Date();
