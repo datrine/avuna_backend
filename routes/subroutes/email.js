@@ -7,6 +7,7 @@ import {
   generateEmailToken,
   verifyTempToken,
   initiateEmailVerification,
+  verifyEmail,
 } from "../../actions/index.js";
 import {
   getAccountByEmailAddress,
@@ -47,6 +48,7 @@ router.get("/verification/token/verify", async (req, res, next) => {
       tokenType: "verification",
     });
     let account = await getAccountByEmailAddress(email);
+     let verRes=await verifyEmail(email)
     res.json({ verified: true });
   } catch (error) {
     console.log(error);

@@ -40,7 +40,6 @@ let getAccount = async (identifier) => {
 let verifyEmail = async (email) => {
   let prom = new Promise(async (resolve, rej) => {
     knex("login_sessions")
-      .where({ email })
       .update({ isEmailVerified: true })
       .where({ email })
       .then((response) => {

@@ -14,4 +14,4 @@ export {
   generatePasswordToken,savePasswordChangeToken,
 } from "./token_mgt.js";
 
-export { basicLogin, initiateEmailVerification ,initiatePasswordChange,completePasswordChange,editProfile} from "./account_mgt.js";
+export { verifyEmail, basicLogin, initiateEmailVerification ,initiatePasswordChange,completePasswordChange,editProfile} from "./account_mgt.js";

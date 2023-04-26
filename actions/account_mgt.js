@@ -103,7 +103,7 @@ const initiateEmailVerification = async ({ account }) => {
       token,
       email,
     });
-    let tokenLink = `${process.env.SERVER_URL}/verify/token?token=${token}&email=${email}`;
+    let tokenLink = `${process.env.SERVER_URL}/api/accounts/email/verification/token/verify?token=${token}&email=${email}`;
     let emailResult = await sendEmail({
       recipient: email,
       locals: { f_name, l_name, token, tokenLink },
