@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourse, editCourse } from "../../actions/index.js";
+import { createCourse, editCourse, getCourses } from "../../actions/index.js";
 import { courseValidator } from "../../utils/validate/index.js";
 import { authRouter } from "../subroutes/index.js";
 const router = Router();
@@ -53,4 +53,17 @@ router.use("/:courseID/edit", authRouter, async (req, res, next) => {
   } catch (error) {}
 });
 
+router.get("/", authRouter, async (req, res, next) => {
+  try {
+    let { account } = req.session.self;
+
+    let regObj = req.body;
+    //validate each property
+    let validationResponse =await getCourses({});
+    res.json(validationResponse);
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
 export default router;

@@ -32,15 +32,20 @@ router.use("/", async (req, res, next) => {
   try {
     let bearerToken = req.headers["authorization"]?.split(" ")[1];
     if (!bearerToken) {
-      throw {msg:"No bearer token"}
+      throw { msg: "No bearer token" };
     }
     let valRes = await validateAccessToken({ token: bearerToken });
     let tokenData = await verifyAccessToken({ token: bearerToken });
     let { sessID, accountID, clientID } = tokenData;
     let account = await getAccountByAccountID(accountID);
     startLoginSession({ accountID, sessID, clientID }).catch(console.log);
-    let loginSession = await getSessionData({ clientID, sessID });
+    let { session: loginSession } = await getSessionData({ clientID, sessID });
+    console.log({ loginSession });
+    if (loginSession.end_by < new Date()) {
+      throw { msg: "Session already ended" };
+    }
     req.session.self = { account, token: bearerToken, loginSession };
+    console.log("ghvghcfgcfgcgff");
     next();
   } catch (error) {
     console.log(error);
@@ -48,3 +53,4 @@ router.use("/", async (req, res, next) => {
   }
 });
 export default router;
+export { router };

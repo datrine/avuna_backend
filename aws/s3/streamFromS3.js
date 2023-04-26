@@ -48,6 +48,7 @@ export const httpPartialStreamFromS3 = async function ({
   startRange,
   endRange,
 }) {
+  endRange=endRange-1
   const client = new S3Client({ region: "us-east-1" });
   let range = `bytes=${startRange}-${endRange}`;
   console.log(range);
@@ -57,8 +58,8 @@ export const httpPartialStreamFromS3 = async function ({
     Range: range,
   });
   const response = await client.send(command);
-  let contentRange = response.ContentRange;
   let contentLength = response.ContentLength;
+  let contentRange = response.ContentRange||`bytes ${startRange}-${contentLength}/*`;
   let contentType = response.ContentType;
   let acceptRanges = response.ContentType;
   /*  let prom = new Promise(async (res, rej) => {
@@ -97,24 +98,36 @@ export const httpPartialStreamFromS3 = async function ({
 
 export const videoPartialStream = async function ({ startRange, endRange }) {
   let fileSize;
-  let stream //= createReadStream(path.join([process.cwd(), "video.mp4"]) );
+  let stream; //= createReadStream(path.join([process.cwd(), "video.mp4"]) );
   let filehandle;
   try {
-    console.log(path.join(process.cwd(), "video2.mp4"))
-    let filehandle = await open(path.join(process.cwd(), "video2.mp4"), "r");
+    let filehandle = await open(path.join(process.cwd(), "video.mp4"), "r");
     fileSize = (await filehandle.stat()).size;
     stream = filehandle.createReadStream({
       start: startRange,
-      end:  Math.min(endRange,fileSize),
+      end: Math.min(endRange, fileSize),
     });
   } finally {
     await filehandle?.close();
   }
-  let contentRange = `bytes ${startRange}-${endRange}/${fileSize}`;
-  let contentLength =Math.min(startRange,fileSize) - startRange  ;
+  /*stream.on("readable", () => {
+    let chunk;
+    while (null !== (chunk = stream.read())) {
+      console.log(chunk);
+    }
+  }); */
+
+  let contentRange = `bytes ${startRange}-${ Math.min(endRange, fileSize)}/${fileSize}`;
+  let contentLength = Math.min(endRange, fileSize) - startRange;
   let contentType = "video/mp4";
   let acceptRanges = "bytes";
-  console.log({ contentLength, contentRange, contentType,fileSize });
+  console.log({
+    contentLength,
+    contentRange,
+    contentType,
+    fileSize,
+    acceptRanges,
+  });
   return {
     stream,
     acceptRanges,

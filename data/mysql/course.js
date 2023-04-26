@@ -35,6 +35,7 @@ let createCourse = async ({creatorID, ...obj}) => {
 };
 
 let editCourse = async ({ editorID, ...obj }) => {
+  let prom = new Promise(async (resolve, rej) => {
   knex.transaction(async function (trx) {
     try {
       let { courseID, ...rest } = rest;
@@ -55,6 +56,28 @@ let editCourse = async ({ editorID, ...obj }) => {
       console.log(error);
       throw error;
     }
-  });
+  });});
+  return prom;
 };
-export { createCourse as createCourseMySQL, editCourse as editCourseMySQL };
+
+let getCourses = async ({ filters }) => {
+  let prom = new Promise(async (resolve, rej) => {
+  knex.transaction(async function (trx) {
+    try {
+     /* let { courseID, ...rest } = rest;
+      let { trx: trxFromHasPermission } = checkPermissionMySQL(
+        { accountID: editorID, permission: "can_get_courses" },
+        trx
+      );
+      trx = trxFromHasPermission; */
+      let courses = await trx("courses")
+        .select("*")
+      resolve({ courses });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });});
+  return prom
+};
+export { createCourse as createCourseMySQL, editCourse as editCourseMySQL,getCourses as getCoursesMySQL };

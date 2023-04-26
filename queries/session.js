@@ -3,7 +3,9 @@ import {
   getActiveLoginMysql,
   getUnverifiedFactorsMysql,
   startLoginSessionMySQL,
-  stopLoginSessionMySQL,getSessionDataMySQL, stopAllLoginSessionMySQL
+  stopLoginSessionMySQL,
+  getSessionDataMySQL,
+  stopAllLoginSessionMySQL,
 } from "../data/index.js";
 
 let createLoginSession = async ({ accountID, factors, clientID }) => {
@@ -17,7 +19,7 @@ let createLoginSession = async ({ accountID, factors, clientID }) => {
 
 let stopLoginSession = async ({ accountID, sessID, clientID }) => {
   try {
-   return await stopLoginSessionMySQL({accountID,sessID,clientID})
+    return await stopLoginSessionMySQL({ accountID, sessID, clientID });
   } catch (error) {
     throw error;
   }
@@ -25,7 +27,7 @@ let stopLoginSession = async ({ accountID, sessID, clientID }) => {
 
 let stopAllLoginSession = async ({ accountID, sessID, clientID }) => {
   try {
-   return await stopAllLoginSessionMySQL({accountID,sessID,clientID})
+    return await stopAllLoginSessionMySQL({ accountID, sessID, clientID });
   } catch (error) {
     throw error;
   }
@@ -40,8 +42,17 @@ let getUnverifiedFactors = async ({ sessID, clientID }) => {
 let startLoginSession = async ({ accountID, clientID, sessID }) => {
   return await startLoginSessionMySQL({ accountID, sessID, clientID });
 };
-let getSessionData = async ({  clientID, sessID }) => {
+let getSessionData = async ({ clientID, sessID }) => {
   return await getSessionDataMySQL({ sessID, clientID });
 };
 
-export { createLoginSession, getActiveLogin, getUnverifiedFactors ,startLoginSession,stopLoginSession,getSessionData,stopAllLoginSession};
+
+export {
+  createLoginSession,
+  getActiveLogin,
+  getUnverifiedFactors,
+  startLoginSession,
+  stopLoginSession,
+  getSessionData,
+  stopAllLoginSession,
+};

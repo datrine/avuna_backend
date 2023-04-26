@@ -71,7 +71,19 @@ let getUserBioByAccountID = async (accountID) => {
   });
   return prom;
 };
+let editUserBio = async ({editorID, accountID, updates}) => {
+  try {
+    console.log({updates})
+    let updateRes = await knex("user_bios")
+      .update({ ...updates })
+      .where({ accountID });
+    return updateRes;
+  } catch (error) {
+    throw error;
+  }
+};
 export {
   createUserInfo as createUserInfoMySql,
   getUserBioByAccountID as getUserBioByAccountIDMySql,
+  editUserBio as editUserBioMysql,
 };

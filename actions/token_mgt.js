@@ -43,7 +43,8 @@ let validateAccessToken = async ({ token }) => {
     //let{payload,protectedHeader}=res;
     return res;
   } catch (error) {
-    throw error;
+    console.log(error)
+    throw {msg:"Access token not valid"};
   }
 };
 

@@ -1,29 +1,16 @@
 import { Router } from "express";
-import { authRouter, emailRouter, passwordRouter, } from "../subroutes/index.js";
-import { getUserBioByAccountID } from "../../queries/user.js";
+import { emailRouter, passwordRouter } from "../subroutes/index.js";
+import accountIDRouter from "./[accountID].js";
+import meRouter from "./me.js";
 const router = Router();
 
-router.use(
-  "/password",
-  passwordRouter
-);
+router.use("/password", passwordRouter);
 
-router.use(
-  "/email",
-  emailRouter
-);
-router.get(
-  "/me",authRouter,
-  async(req,res,next)=>{
-try {
-  let {account: selfAccount}=req.session.self;
-let {pass_hash,accountID,...restOfAccount}=selfAccount
-let userBio=await  getUserBioByAccountID(selfAccount?.accountID);
-let accountInfo={...restOfAccount,...userBio,accountID}
-return res.json(accountInfo)
-} catch (error) {
-  res.json(error)
-}
-  }
-);
+router.use("/email", emailRouter);
+
+router.use("/me/",meRouter);
+
+router.use("/:accountID/",accountIDRouter);
+
+
 export default router;

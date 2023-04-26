@@ -19,15 +19,15 @@ let getAccount = async (identifier) => {
       .then((response) => {
         let account = response[0];
         if (!account) {
-          rej({msg:"No account matches email."})
+          rej({ msg: "No account matches email." });
         }
         account = { ...account, isEmailVerified: !!account.isEmailVerified };
         resolve(account);
       })
       .catch((err) => {
         logger.log({ level: "info", message: err });
-        console.log({err})
-        rej(err) ;
+        console.log({ err });
+        rej(err);
       });
   });
   return prom;
@@ -73,23 +73,22 @@ let verifyEmail = async (email) => {
  */
 let getAccountByAccountID = async (accountID) => {
   let prom = new Promise(async (resolve, rej) => {
-    knex
+    let response = await knex
       .select("*")
       .from("accounts")
       .where({ accountID })
       .on("query-error", function (error, obj) {
         logger.log("info", error);
         rej({ msg: "Unknown error" });
-      })
-      .then((response) => {
-        let account = response[0];
-        account = { ...account, isEmailVerified: !!account.isEmailVerified };
-        resolve(account);
-      })
-      .catch((err) => {
-        logger.log({ level: "info", message: err });
-        //throw error;
       });
+    let account = response[0];
+    account = { ...account, isEmailVerified: !!account.isEmailVerified };
+    let logins = await knex
+      .select("*")
+      .from("login_sessions")
+      .where({ accountID });
+    account = { ...account, isNewLogin: !logins.length };
+    resolve(account);
   });
   return prom;
 };
@@ -146,21 +145,19 @@ let createAccount = async ({
  * @param {string} regObj.email
  * @param {string} regObj.pass_hash
  */
-let changePassword = async ({
-  email,
-  pass_hash,
-}) => {
+let changePassword = async ({ email, pass_hash }) => {
   let prom = new Promise(async (resolve, rej) => {
     knex("accounts")
       .update({
         pass_hash,
-      }).where({email})
+      })
+      .where({ email })
       .on("query-error", function (error, obj) {
         console.log(error);
         rej({ msg: "Unknown error" });
       })
       .then((response) => {
-        resolve({ info:"Password changed" });
+        resolve({ info: "Password changed" });
       })
       .catch((err) => {
         logger.log({ level: "info", message: err });
@@ -175,5 +172,5 @@ export {
   getAccount as getAccountMysql,
   getAccountByAccountID as getAccountByAccountIDMySQL,
   verifyEmail as verifyEmailMySQL,
-  changePassword as changePasswordMySQL
+  changePassword as changePasswordMySQL,
 };

@@ -167,7 +167,7 @@ knex.schema.hasTable("content").then(function (exists) {
       t.double("size");
       t.json("desc");
       t.string("contentType");
-      t.json("awsInfo");
+      t.json("media");
       t.string("creatorID");
       t.enum("mode",["publish","draft"]);
       t.timestamp("createdAt").defaultTo(knex.fn.now());
@@ -175,5 +175,4 @@ knex.schema.hasTable("content").then(function (exists) {
     });
   }
 });
-
 export default knex;

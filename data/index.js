@@ -1,4 +1,5 @@
-export { createCourseMySQL, editCourseMySQL } from "./mysql/course.js";
+export { addContentMySQL,editContentMySQL } from "./mysql/content.js";
+export { createCourseMySQL, editCourseMySQL ,getCoursesMySQL} from "./mysql/course.js";
 
 export {
   checkPermissionMySQL,

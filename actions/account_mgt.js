@@ -1,5 +1,6 @@
 import {
   createLoginSession,
+  editUserBio,
   getAccountByEmailAddress,
   getActiveLogin,
   getUnverifiedFactors,
@@ -23,6 +24,9 @@ const basicLogin = async ({ password, email }) => {
     let isCorrectPass = await bcrypt.compare(password, account.pass_hash);
     if (!isCorrectPass) {
       return { err: { msg: "Email or password not correct" } };
+    }
+    if (!account.isEmailVerified) {
+      return { err: { msg: "Email not verified" } };
     }
     let factors = [
       { name: "basic", activeStatus: "initialized", statusHistory: [] },
@@ -137,5 +141,8 @@ const completePasswordChange = async ({email,password}) => {
   }
 };
 
+const editProfile=async(...obj)=>{
+ return await editUserBio(...obj)
+}
 
-export { basicLogin ,logout,initiateEmailVerification,initiatePasswordChange,allSessionLogout,completePasswordChange};
+export { basicLogin ,logout,initiateEmailVerification,initiatePasswordChange,allSessionLogout,completePasswordChange,editProfile};
