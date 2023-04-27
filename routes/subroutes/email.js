@@ -1,20 +1,12 @@
 import { Router } from "express";
-import { basicLoginValidator } from "../../utils/validate/index.js";
 import {
-  validateAccessToken,
-  verifyAccessToken,
-  saveEmailVerificationToken,
-  generateEmailToken,
   verifyTempToken,
   initiateEmailVerification,
   verifyEmail,
 } from "../../actions/index.js";
 import {
   getAccountByEmailAddress,
-  getSessionData,
-  startLoginSession,
 } from "../../queries/index.js";
-import { sendEmail } from "../../utils/email_service/index.js";
 const router = Router();
 router.get("/send", async (req, res, next) => {
   try {
