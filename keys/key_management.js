@@ -1,11 +1,11 @@
 const { generateKeyPair, createPrivateKey } = await import("node:crypto");
 import { config } from "dotenv";
-import { readFile } from "node:fs";
+import { existsSync, readFile } from "node:fs";
 import fs from "node:fs/promises";
 config();
 let PASS_PHRASE = process.env.PASS_PHRASE;
 let genMyKeys = async () => {
-  let exist = await getPEMKey("./my_private.key");
+  let exist = await existsSync("./my_private.key");
   if (!exist) {
     generateKeyPair(
       "ec",
