@@ -30,7 +30,7 @@ router.get("/verification/token/generate", async (req, res, next) => {
     res.json({ sent: true, ...result });
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     
     res.json({ err: error });
   }
