@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 config();
 let PASS_PHRASE = process.env.PASS_PHRASE;
 let genMyKeys = async () => {
-  let exist = await existsSync("./my_private.key");
+  let exist =  existsSync("./my_private.key");
   if (!exist) {
     generateKeyPair(
       "ec",

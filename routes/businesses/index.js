@@ -8,7 +8,7 @@ router.post(
     try {
       
   let body=req.body
-  let { name, section, phone_num, size,}=body
+  let { name, sector, phone_num, size,}=body
   let account=req.session.self.account;
   console.log({account})
   if (account.account_type!=="student") {
@@ -16,7 +16,7 @@ router.post(
   }
   let creatorID=account.accountID;
 
-  let creationRes=await  createBusiness({name,section,phone_num,size,creatorID})
+  let creationRes=await  createBusiness({name,sector,phone_num,size,creatorID})
     } catch (error) {
       console.log(error)
       res.status(400)

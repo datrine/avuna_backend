@@ -6,7 +6,7 @@ import { v4 as uuidV4 } from "uuid";
  *
  * @param {object} regObj
  * @param {string} regObj.name
- * @param {boolean} regObj.section
+ * @param {boolean} regObj.sector
  * @param {string} regObj.phone_num
  * @param {number} regObj.size
  * @param {number} regObj.creatorID
@@ -20,7 +20,7 @@ let createBusiness = async ({ name, sector, phone_num, size, creatorID }) => {
       phone_num,
       size,
       creatorID,
-      section: sector,
+       sector,
     });
     return creationRes;
   } catch (error) {
