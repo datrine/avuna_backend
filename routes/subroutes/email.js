@@ -47,7 +47,7 @@ router.get("/verification/token/verify", async (req, res, next) => {
     });
     let account = await getAccountByEmailAddress(email);
      let verRes=await verifyEmail(email)
-    res.json({ verified: true });
+    res.redirect(`${process.env.FRONTEND_URL}/verify`);
   } catch (error) {
     console.log(error);
     res.status(400)
