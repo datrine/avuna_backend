@@ -5,6 +5,7 @@ import { default as accessRouter } from "./access/index.js";
 import { default as accountsRouter } from "./accounts/index.js";
 import { default as coursesRouter } from "./courses/index.js";
 import { default as contentsRouter } from "./content/index.js";
+import { default as businessesRouter } from "./businesses/index.js";
 import {
   emailRouter,
   authRouter,
@@ -17,6 +18,7 @@ router.use("/students", avunaStudentsRouter);
 router.use("/accounts", accountsRouter);
 router.use("/courses", coursesRouter);
 router.use("/contents", contentsRouter);
+router.use("/businesses", businessesRouter);
 router.use("/admin", avunaAdminsRouter);
 router.use("/login", loginRouter);
 router.use("/email", emailRouter);

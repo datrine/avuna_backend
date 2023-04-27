@@ -1,3 +1,5 @@
+export { editBusiness,createBusiness } from "./business_mgt.js";
+
 export { addContent,editContent } from "./content_mgt.js";
 
 export {createCourse,editCourse,getCourses} from "./courses_mgt.js";

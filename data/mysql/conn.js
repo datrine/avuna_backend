@@ -181,9 +181,34 @@ knex.schema.hasTable("rating").then(function (exists) {
       t.string("contentID");
       t.string("rater");
       t.decimal("stars");
-      t.string("desc");
-      t.json("media");
-      t.enum("mode",["publish","draft"]);
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("rating").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("rating", function (t) {
+      t.string("ratingID");
+      t.string("contentID");
+      t.string("rater");
+      t.decimal("stars");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("businesses").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("businesses", function (t) {
+      t.string("businessID").primary();
+      t.string("name");
+      t.string("sector");
+      t.string("size");
+      t.string("creatorID");
+      t.decimal("phone_num");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
     });

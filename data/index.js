@@ -1,3 +1,5 @@
+export { createBusinessMySQL,editBusinessMySQL } from "./mysql/business.js";
+
 export { addContentMySQL,editContentMySQL } from "./mysql/content.js";
 export { createCourseMySQL, editCourseMySQL ,getCoursesMySQL} from "./mysql/course.js";
 
@@ -47,3 +49,4 @@ export {
   createUserInfoMySql,
   getUserBioByAccountIDMySql,
 } from "./mysql/user.js";
+

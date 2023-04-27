@@ -16,7 +16,7 @@ import getVideoCodecInfo from "./utils/video.js";
 import { open } from "fs/promises";
 import path from "path";
 config();
-//await genMyKeys();
+await genMyKeys();
 const app = express();
 const server = http.createServer(app);
 app.use(cors());
