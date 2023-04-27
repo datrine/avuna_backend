@@ -29,12 +29,16 @@ router.get("/send", async (req, res, next) => {
 router.get("/verification/token/generate", async (req, res, next) => {
   try {
     let { email } = req.query;
+    if (!email) {
+      throw {msg:"No email supplied"}
+    }
     let account = await getAccountByEmailAddress(email);
     console.log({email})
     let result = await initiateEmailVerification({ account });
     res.json({ sent: true, ...result });
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json({ err: error });
   }
 });
