@@ -31,11 +31,11 @@ let createLoginSession = async ({
             console.log(error);
             return rej({ err: { msg: "Unknown error" } });
           });
-        if (activeSessions.length > 3) {
+       /* if (activeSessions.length > 3) {
           return rej({
             err: { msg: "Exceeded maximum allowed active login" },
           });
-        }
+        }*/
         let sessID = uuidV4();
         await trx("login_sessions")
           .insert({

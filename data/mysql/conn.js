@@ -214,4 +214,20 @@ knex.schema.hasTable("businesses").then(function (exists) {
     });
   }
 });
+
+knex.schema.hasTable("quizzes").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("quizzes", function (t) {
+      t.string("quizID").primary();
+      t.string("courseID");
+      t.string("contentID");
+      t.string("question");
+      t.json("options");
+      t.string("answer");
+      t.string("creatorID");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
 export default knex;

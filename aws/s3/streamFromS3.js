@@ -58,7 +58,7 @@ export const httpPartialStreamFromS3 = async function ({
     Range: range,
   });
   const response = await client.send(command);
-  let contentLength = response.ContentLength;
+  let contentLength = response.ContentLength+1;
   let contentRange = response.ContentRange||`bytes ${startRange}-${contentLength}/*`;
   let contentType = response.ContentType;
   let acceptRanges = response.ContentType;
