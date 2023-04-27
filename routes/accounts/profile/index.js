@@ -33,7 +33,7 @@ router.post("/edit", async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     res.json({ err: error });
   }
 });

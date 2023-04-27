@@ -41,7 +41,7 @@ router.post("/", async (req, res, next) => {
      // process referral_code
      let { referral_code} = validationResponse.regObj;
   } catch (error) {
-    res.status=400
+    res.status(400)
     console.log(error);
     res.json({err:error})
   }

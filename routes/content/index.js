@@ -56,7 +56,7 @@ router.post(
       res.json({ contentID, info: "content saved" });
     } catch (error) {
       console.log(error);
-      res.status=400
+      res.status(400)
       res.json({err:error});
     }
   }
@@ -71,7 +71,7 @@ router.get("/content", authRouter, async (req, res, next) => {
     res.json({ roleID });
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     res.json(error);
   }
 });

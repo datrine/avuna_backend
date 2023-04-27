@@ -14,6 +14,7 @@ router.get("/send", async (req, res, next) => {
     res.json({ sent: true });
   } catch (error) {
     console.log(error);
+    res.status(400)
     res.json({ err: error });
   }
 });
@@ -49,7 +50,7 @@ router.get("/verification/token/verify", async (req, res, next) => {
     res.json({ verified: true });
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     res.json({ err: error });
   }
 });

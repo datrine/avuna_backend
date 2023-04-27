@@ -19,7 +19,7 @@ router.get("/",authRouter, async (req, res, next) => {
     return res.json(validationResponse);
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     return res.json({ err: error });
   }
 });

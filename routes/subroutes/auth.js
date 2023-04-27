@@ -24,6 +24,7 @@ router.get("/refresh_token", async (req, res, next) => {
     res.json(tokens);
   } catch (error) {
     console.log(error);
+    res.status(400)
     res.json(error);
   }
 });
@@ -49,7 +50,7 @@ router.use("/", async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400)
     res.json({ err: error });
   }
 });
