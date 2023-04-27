@@ -26,6 +26,7 @@ router.post("/create", authRouter, async (req, res, next) => {
     res.json(createRes);
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json(error);
   }
 });
@@ -50,7 +51,10 @@ router.use("/:courseID/edit", authRouter, async (req, res, next) => {
 
     let createRes = await editCourse({ ...info, editorID: account.accountID });
     res.json(createRes);
-  } catch (error) {}
+  } catch (error) {
+    res.status=400
+    res.json({err:error})
+  }
 });
 
 router.get("/", authRouter, async (req, res, next) => {
@@ -63,6 +67,7 @@ router.get("/", authRouter, async (req, res, next) => {
     res.json(validationResponse);
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json(error);
   }
 });
