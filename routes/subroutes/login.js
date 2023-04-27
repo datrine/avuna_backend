@@ -25,6 +25,7 @@ router.post("/basic", async (req, res, next) => {
     }
     return res.json(loginRes);
   } catch (error) {
+    res.status=400
     console.log(error);
   }
 });

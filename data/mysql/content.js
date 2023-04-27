@@ -16,8 +16,8 @@ let addContent = async ({ creatorID, ...obj }) => {
           trx
         );
         trx = trxFromHasPermission;
-
-        let [course] = await trx("content")
+        console.log({obj})
+        let [course] = await trx("courses")
           .select("*")
           .where({ courseID: obj.courseID });
           if (!course) {

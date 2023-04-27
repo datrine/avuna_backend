@@ -164,11 +164,25 @@ knex.schema.hasTable("content").then(function (exists) {
       t.string("contentID").primary();
       t.string("courseID");
       t.string("title");
-      t.double("size");
-      t.json("desc");
-      t.string("contentType");
+      t.string("desc");
       t.json("media");
       t.string("creatorID");
+      t.enum("mode",["publish","draft"]);
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("rating").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("rating", function (t) {
+      t.string("ratingID");
+      t.string("contentID");
+      t.string("rater");
+      t.decimal("stars");
+      t.string("desc");
+      t.json("media");
       t.enum("mode",["publish","draft"]);
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());

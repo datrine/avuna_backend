@@ -17,6 +17,7 @@ router.post(
       res.json({ scopeID });
     } catch (error) {
       console.log(error);
+      res.status=400
       res.json(error);
     }
   }
@@ -34,6 +35,7 @@ router.post(
       res.json({ roleID });
     } catch (error) {
       console.log(error);
+      res.status=400
       res.json(error);
     }
   },

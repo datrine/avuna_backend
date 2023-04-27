@@ -25,14 +25,14 @@ const maxChunk = 10 * 1024 * 1024;
  * @param {string} param0.filename
  * @returns
  */
-export const uploadLightContent = async ({ buffer, filename }) => {
+export const uploadLightContent = async ({ buffer, filename,contentType }) => {
   const client = new S3Client({ region: "us-east-1" });
   const bucketName = "avunabucket";
   const key = filename;
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: key,
-    Body: buffer,
+    Body: buffer,ContentType:contentType
   });
 
   try {
@@ -52,7 +52,7 @@ export const uploadLightContent = async ({ buffer, filename }) => {
  * @param {string} param0.filename
  * @returns
  */
-export const uploadHeavyContent = async ({ buffer, filename }) => {
+export const uploadHeavyContent = async ({ buffer, filename,contentType }) => {
   const s3Client = new S3Client({ region: "us-east-1" });
   const bucketName = "avunabucket";
   const key = filename;
@@ -63,7 +63,7 @@ export const uploadHeavyContent = async ({ buffer, filename }) => {
     const multipartUpload = await s3Client.send(
       new CreateMultipartUploadCommand({
         Bucket: bucketName,
-        Key: key,
+        Key: key,ContentType:contentType
       })
     );
 

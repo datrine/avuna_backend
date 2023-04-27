@@ -19,6 +19,7 @@ router.get("/recovery/request", async (req, res, next) => {
     res.json({ sent: true });
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json({ err: error });
   }
 });
@@ -37,6 +38,7 @@ router.post("/recovery/change", async (req, res, next) => {
     res.json(resOf);
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json({ err: error });
   }
 });

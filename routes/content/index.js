@@ -22,27 +22,27 @@ router.post(
       let media = [];
       for (const fl of files) {
         let { buffer, originalname: filename, mimetype, size } = fl;
-        let mediaID = nanoid();
-        let processUpload = async ({ buffer, filename }) => {
+        let ext=filename.split(".")[1]
+        let key = nanoid()+`.${ext}`;
+        let processUpload = async ({ buffer, key }) => {
           let uploadRes;
           let upTo5 = 5 * 1024 * 1024 >= buffer.byteLength;
           if (upTo5) {
-            uploadRes = await uploadHeavyContent({ buffer, filename });
+            uploadRes = await uploadHeavyContent({ buffer, filename: key ,contentType:mimetype});
             uploadRes.Key;
           } else {
-            uploadRes = await uploadLightContent({ buffer, filename });
+            uploadRes = await uploadLightContent({ buffer, filename: key ,contentType:mimetype});
           }
           console.log({ uploadRes });
           let mediaItem = {
             size,
-            name: uploadRes.Key,
+            name: key,
             mimetype,
-            originalname: filename,
-            mediaID,
+             key,
           };
           media.push(mediaItem);
         };
-        await processUpload({ buffer, filename: mediaID });
+        await processUpload({ buffer, key });
       }
       let resDB = await addContent({
         creatorID: accountID,
@@ -50,13 +50,14 @@ router.post(
         desc,
         title,
         mode,
-        media,
+        media:JSON.stringify(media),
       });
       let { contentID } = resDB;
       res.json({ contentID, info: "content saved" });
     } catch (error) {
       console.log(error);
-      res.json(error);
+      res.status=400
+      res.json({err:error});
     }
   }
 );
@@ -70,6 +71,7 @@ router.get("/content", authRouter, async (req, res, next) => {
     res.json({ roleID });
   } catch (error) {
     console.log(error);
+    res.status=400
     res.json(error);
   }
 });
