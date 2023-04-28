@@ -9,7 +9,8 @@ router.use("/", authRouter, async (req, res, next) => {
   try {
     let { account: selfAccount } = req.session.self;
     let { pass_hash, accountID, ...restOfAccount } = selfAccount;
-    let userBio = await getUserBioByAccountID(selfAccount?.accountID);
+    let userBio = await getUserBioByAccountID(accountID);
+    console.log({userBio})
     req.session.self.userBio = userBio;
     next();
   } catch (error) {
@@ -27,10 +28,11 @@ router.use(
   profileRouter
 );
 
-router.get("/", authRouter, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     let { account: selfAccount, userBio } = req.session.self;
     let { pass_hash, accountID, ...restOfAccount } = selfAccount;
+    console.log({userBio})
     let accountInfo = { ...restOfAccount, ...userBio, accountID };
     return res.json(accountInfo);
   } catch (error) {

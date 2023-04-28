@@ -424,7 +424,16 @@ let addRolesToAccount = async ({ creatorID, accountID, newRoles }) => {
   });
   return prom;
 };
-
+let getPermissions = async (filters, trx) => {
+  try {
+  let  trx = await knex.transactionProvider()();
+   let permissions= await trx.select("*").from("permissions");
+   return permissions;
+  } catch (error) {
+    console.log(error);
+    throw error
+  }
+};
 export {
   createPermission as createPermissionMySQL,
   addScopesToPermission as addScopeMySQL,
@@ -434,5 +443,5 @@ export {
   addRolesToAccount as addRolesToAccountMySQL,
   createScope as createScopeMySQL,
   deleteRole as deleteRoleMySQL,
-  addScopesToPermission as addScopesToPermissionMySQL,
+  addScopesToPermission as addScopesToPermissionMySQL,getPermissions as getPermissionsMySQL
 };

@@ -1,5 +1,4 @@
 import knexJs from "knex";
-import {v4 as  uuidV4} from "uuid";
 import {config} from "dotenv";
 config()
 let {DB_HOST,DB_USERNAME,DB_PASSWORD,DB_NAME,DB_PORT}=process.env
@@ -230,4 +229,27 @@ knex.schema.hasTable("quizzes").then(function (exists) {
     });
   }
 });
+
+knex.schema.hasTable("quiz_sessions").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("quiz_sessions", function (t) {
+      t.string("quizSessionID").primary();
+      t.string("courseID");
+      t.string("contentID");
+      t.string("title");
+      t.string("desc");
+      t.string("durationMode");
+      t.json("options");
+      t.string("numOfQuestions");
+      t.json("questionIDs");
+      t.string("creatorID");
+      t.json("state");
+      t.json("examinees");
+      t.timestamp("stop");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
 export default knex;

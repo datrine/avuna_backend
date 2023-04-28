@@ -6,10 +6,10 @@ router.use("/", (req, res, next) => {
   next();
 });
 
-router.get("/",authRouter, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     //validate each property
-    let { clientID, sessionID, accountID } = req.session.self.account;
+    let { clientID, sessionID,accountID} = req.query;
     let validationResponse = await logout({ clientID, sessionID, accountID });
     if (!validationResponse?.isValid) {
       res.statusCode = 403;

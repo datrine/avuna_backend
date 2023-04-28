@@ -24,7 +24,7 @@ let createLoginSession = async ({
           .from("login_sessions")
           .where({ accountID })
           .andWhereRaw(
-            `(JSON_EXTRACT(state,'$.name')='active' OR JSON_EXTRACT(state,'$.name')!='initiated') and end_by is NULL OR end_by > NOW() `
+            `(JSON_EXTRACT(state,'$.name')='active' OR JSON_EXTRACT(state,'$.name')!='initiated') and ( end_by is NULL OR end_by > NOW()) `
           )
           .on("query-error", function (error, obj) {
             logger.log("info", error);
@@ -217,7 +217,7 @@ let stopLoginSession = async ({ accountID, sessID, clientID }) => {
         let sessions = await trx
           .select("*")
           .from("login_sessions")
-          .where({ clientID, sessID, accountID })
+          .where({ clientID, sessID,})
           .on("query-error", function (error, obj) {
             console.log(error);
             return rej({ msg: "Error." });

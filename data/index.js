@@ -8,7 +8,7 @@ export {
   createPermissionMySQL,
   createRoleMySQL,
   addRolesToAccountMySQL,
-  createScopeMySQL,
+  createScopeMySQL,getPermissionsMySQL
 } from "./mysql/rbac.js";
 export {
   verifyTempTokenMySQL,

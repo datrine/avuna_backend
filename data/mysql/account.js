@@ -44,12 +44,12 @@ let verifyEmail = async (email) => {
       .where({ email })
       .then((response) => {
         console.log(response);
-        resolve({info:"Email verified"});
+        resolve({ info: "Email verified" });
       })
       .catch((err) => {
         logger.log({ level: "info", message: err });
         //throw error;
-        rej(err)
+        rej(err);
       });
   });
   return prom;
@@ -75,7 +75,7 @@ let getAccountByAccountID = async (accountID) => {
       .select("*")
       .from("login_sessions")
       .where({ accountID });
-    account = { ...account, isNewLogin: !logins.length };
+    account = { ...account, isNewLogin: !(logins.length > 1) };
     resolve(account);
   });
   return prom;
