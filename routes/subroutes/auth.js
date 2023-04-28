@@ -39,6 +39,9 @@ router.use("/", async (req, res, next) => {
     let tokenData = await verifyAccessToken({ token: bearerToken });
     let { sessID, accountID, clientID } = tokenData;
     let account = await getAccountByAccountID(accountID);
+    if (!account) {
+      throw  { msg: "No such account exists!" };
+    }
     startLoginSession({ accountID, sessID, clientID }).catch(console.log);
     let { session: loginSession } = await getSessionData({ clientID, sessID });
     console.log({ loginSession });
