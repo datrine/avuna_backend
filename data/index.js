@@ -1,3 +1,5 @@
+export { addPreferenceMySQL } from "./mysql/account.js";
+
 export { createBusinessMySQL,editBusinessMySQL } from "./mysql/business.js";
 
 export { addContentMySQL,editContentMySQL } from "./mysql/content.js";

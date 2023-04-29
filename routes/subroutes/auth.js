@@ -49,7 +49,6 @@ router.use("/", async (req, res, next) => {
       throw { msg: "Session already ended" };
     }
     req.session.self = { account, token: bearerToken, loginSession };
-    console.log("ghvghcfgcfgcgff");
     next();
   } catch (error) {
     console.log(error);

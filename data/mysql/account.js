@@ -155,10 +155,26 @@ let changePassword = async ({ email, pass_hash }) => {
   return prom;
 };
 
+let addPreference=async({accountID,preference})=>{
+  try {
+   let trx=await knex.transactionProvider()();
+ let [preferenceInfo]=await  trx("preferences").select("*").where({accountID});
+ if (!preferenceInfo) {
+  await  trx("preferences").insert({accountID,preference});
+ }
+ else{
+  await  trx("preferences").update({preference}).where({accountID});
+ }
+ return {info:"Preference saved."}
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 export {
   createAccount as createAccountMysql,
   getAccount as getAccountMysql,
   getAccountByAccountID as getAccountByAccountIDMySQL,
   verifyEmail as verifyEmailMySQL,
-  changePassword as changePasswordMySQL,
+  changePassword as changePasswordMySQL,addPreference as addPreferenceMySQL
 };
