@@ -192,6 +192,7 @@ let addPreferences = async ({ accountID, preferences }) => {
     throw error;
   }
 };
+
 let getPreferences = async (accountID) => {
   try {
     let trx = await knex.transactionProvider()();
@@ -206,6 +207,7 @@ let getPreferences = async (accountID) => {
     throw error;
   }
 };
+
 export {
   createAccount as createAccountMysql,
   getAccount as getAccountMysql,
