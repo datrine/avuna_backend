@@ -1,25 +1,47 @@
 import { Router } from "express";
-import {authRouter} from "../subroutes/index.js"
-import { addPreference } from "../../actions/account_mgt.js";
+import { authRouter } from "../subroutes/index.js";
+import {
+  addPreference as addPreferences,
+  getPreferences,
+} from "../../actions/account_mgt.js";
 const router = Router();
-router.post("/add",authRouter, async (req, res, next) => {
+router.post("/add", authRouter, async (req, res, next) => {
   try {
-    let {accountID,}=req.session.self.account
-    let {preference}=req.body
-     let addRes=await addPreference({accountID,preference});
-     res.json(addRes)
+    let { accountID, account_type } = req.session.self.account;
+    let { preferences } = req.body;
+    if (account_type !== "student") {
+      throw { msg: "Can only be done on the student account" };
+    }
+    if (!preferences) {
+      throw { msg: "A valid preference must be selected" };
+    }
+    let prefArr=[]
+    for (const preference in preferences) {
+      if (Object.hasOwnProperty.call(preferences, preference)) {
+        const element = { name: preference,value:preferences[preference] };
+        prefArr.push(element)
+      }
+    }
+    let addRes = await addPreferences({ accountID, preferences:prefArr });
+    res.json(addRes);
   } catch (error) {
     console.log(error);
-    res.status(400)
+    res.status(400);
     res.json(error);
   }
 });
 
-router.post("/change", async (req, res, next) => {
+router.get("/", authRouter, async (req, res, next) => {
   try {
+    let { accountID, account_type } = req.session.self.account;
+    if (account_type !== "student") {
+      throw { msg: "Can only be done on the student account" };
+    }
+    let preference = await getPreferences(accountID);
+    res.json(preference);
   } catch (error) {
     console.log(error);
-    res.status(400)
+    res.status(400);
     res.json({ err: error });
   }
 });

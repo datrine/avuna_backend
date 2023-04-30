@@ -256,7 +256,7 @@ knex.schema.hasTable("preferences").then(function (exists) {
   if (!exists) {
     return knex.schema.createTable("preferences", function (t) {
       t.string("accountID").primary();
-      t.string("preference");
+      t.json("preferences");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
     });

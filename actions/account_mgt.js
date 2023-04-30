@@ -19,8 +19,9 @@ import {
   saveTokens,
 } from "./token_mgt.js";
 import {
-  addPreferenceMySQL,
+  addPreferencesMySQL,
   changePasswordMySQL,
+  getPreferencesMySQL,
   updateFactorInfoStateMySQL,
   verifyEmailMySQL,
 } from "../data/index.js";
@@ -160,7 +161,11 @@ const verifyEmail = async (email) => {
 };
 
 const addPreference = async (obj) => {
-  return await addPreferenceMySQL(obj);
+  return await addPreferencesMySQL(obj);
+};
+
+const getPreferences = async (accountID) => {
+  return await getPreferencesMySQL(accountID);
 };
 
 export {
@@ -171,5 +176,5 @@ export {
   allSessionLogout,
   completePasswordChange,
   editProfile,
-  verifyEmail,addPreference
+  verifyEmail,addPreference,getPreferences
 };

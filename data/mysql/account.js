@@ -1,3 +1,4 @@
+import { json } from "express";
 import logger from "../../utils/logger.js";
 import knex from "./conn.js";
 import { v4 as uuidV4 } from "uuid";
@@ -155,26 +156,62 @@ let changePassword = async ({ email, pass_hash }) => {
   return prom;
 };
 
-let addPreference=async({accountID,preference})=>{
+let addPreferences = async ({ accountID, preferences }) => {
   try {
-   let trx=await knex.transactionProvider()();
- let [preferenceInfo]=await  trx("preferences").select("*").where({accountID});
- if (!preferenceInfo) {
-  await  trx("preferences").insert({accountID,preference});
- }
- else{
-  await  trx("preferences").update({preference}).where({accountID});
- }
- return {info:"Preference saved."}
+    let trx = await knex.transactionProvider()();
+    let [preferenceInfo] = await trx("preferences")
+      .select("*")
+      .where({ accountID });
+    if (!preferenceInfo) {
+      let prefs = [ ... preferences ];
+      prefs=prefs.map(pref=>({...pref,createdOn:new Date()}))
+      await trx("preferences").insert({ accountID, preferences:JSON.stringify(prefs) });
+    } else {
+      let originalPrefs=preferenceInfo.preferences
+      let tosave=[]
+      for (const pref of originalPrefs) {
+        let indexOf=[...preferences].findIndex(pr=>pr.name=pref.name);
+        console.log({indexOf})
+        if (indexOf===-1) {
+          tosave.push(pref)
+          continue
+        }
+        let pr=[...preferences][indexOf]
+        let merged={...pref, ...pr,updateOn:new Date()}
+        tosave.push(merged)
+        preferences.splice(indexOf,1)
+      }
+      tosave = [ ...tosave,...preferences ];
+      tosave = JSON.stringify(tosave);
+      await trx("preferences").update({ preferences:tosave }).where({ accountID });
+    }
+    await trx.commit();
+    return { info: "Preference saved." };
   } catch (error) {
-    console.log(error)
-    throw error
+    console.log(error);
+    throw error;
   }
-}
+};
+let getPreferences = async (accountID) => {
+  try {
+    let trx = await knex.transactionProvider()();
+    let [preferenceInfo] = await trx("preferences")
+      .select("*")
+      .where({ accountID });
+    let { accountID: accID, ...rest } = preferenceInfo;
+    preferenceInfo = { ...rest };
+    return preferenceInfo;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 export {
   createAccount as createAccountMysql,
   getAccount as getAccountMysql,
   getAccountByAccountID as getAccountByAccountIDMySQL,
   verifyEmail as verifyEmailMySQL,
-  changePassword as changePasswordMySQL,addPreference as addPreferenceMySQL
+  changePassword as changePasswordMySQL,
+  addPreferences as addPreferencesMySQL,
+  getPreferences as getPreferencesMySQL,
 };
