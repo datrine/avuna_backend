@@ -1,3 +1,5 @@
+export { updateStateMySQL,saveInitializedPaymentMySQL } from "./mysql/payment.js";
+
 export { addPreferencesMySQL ,getPreferencesMySQL} from "./mysql/account.js";
 
 export { createBusinessMySQL,editBusinessMySQL } from "./mysql/business.js";

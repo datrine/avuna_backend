@@ -145,10 +145,13 @@ knex.schema.hasTable("courses").then(function (exists) {
   if (!exists) {
     return knex.schema.createTable("courses", function (t) {
       t.string("courseID").primary();
+      t.string("category");
       t.string("code").unique();
       t.string("title");
       t.string("desc");
       t.json("state");
+      t.enum("accessType",["full_free","triable","full_paid"]);
+      t.boolean("isCertifiable");
       t.string("creatorID");
       t.json("editHistory");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
@@ -162,6 +165,7 @@ knex.schema.hasTable("content").then(function (exists) {
     return knex.schema.createTable("content", function (t) {
       t.string("contentID").primary();
       t.string("courseID");
+      t.string("courseCategory");
       t.string("title");
       t.string("desc");
       t.json("media");
@@ -257,6 +261,52 @@ knex.schema.hasTable("preferences").then(function (exists) {
     return knex.schema.createTable("preferences", function (t) {
       t.string("accountID").primary();
       t.json("preferences");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("enrollments").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("enrollments", function (t) {
+      t.string("enrollmentID").primary();
+      t.string("accountID");
+      t.string("courseID");
+      t.decimal("price");
+      t.json("state");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("carts").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("carts", function (t) {
+      t.string("cartID").primary();
+      t.string("accountID");
+      t.decimal("price");
+      t.json("bag");
+      t.json("state");
+      t.json("stateHistory");
+      t.timestamp("createdAt").defaultTo(knex.fn.now());
+      t.timestamp("updatedAt").defaultTo(knex.fn.now());
+    });
+  }
+});
+
+knex.schema.hasTable("payments").then(function (exists) {
+  if (!exists) {
+    return knex.schema.createTable("payments", function (t) {
+      t.string("paymentID").primary();
+      t.string("accountID")
+      t.string("referenceID");
+      t.string("itemID");
+      t.string("platform").defaultTo("paystack");
+      t.decimal("amount");
+      t.json("state");
+      t.json("stateHistory");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
     });
