@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { authRouter } from "../subroutes/index.js";
-import {
-  addPreference as addPreferences,
+import { addPreferences,
   getPreferences,
 } from "../../actions/account_mgt.js";
 const router = Router();

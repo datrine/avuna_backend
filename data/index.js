@@ -1,3 +1,5 @@
+export { createCartMySQL ,getMyActiveCartsMySQL,getCartInfoMySQL} from "./mysql/cart.js";
+
 export { updateStateMySQL,saveInitializedPaymentMySQL } from "./mysql/payment.js";
 
 export { addPreferencesMySQL ,getPreferencesMySQL} from "./mysql/account.js";
@@ -5,7 +7,7 @@ export { addPreferencesMySQL ,getPreferencesMySQL} from "./mysql/account.js";
 export { createBusinessMySQL,editBusinessMySQL } from "./mysql/business.js";
 
 export { addContentMySQL,editContentMySQL } from "./mysql/content.js";
-export { createCourseMySQL, editCourseMySQL ,getCoursesMySQL} from "./mysql/course.js";
+export { createCourseMySQL, editCourseMySQL ,getCoursesMySQL,getPricesOfCoursesMySQL} from "./mysql/course.js";
 
 export {
   checkPermissionMySQL,

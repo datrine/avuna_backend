@@ -1,8 +1,10 @@
+export { createCart,getMyActiveCarts ,getCartInfo} from "./cart_mgt.js";
+
 export { editBusiness, createBusiness } from "./business_mgt.js";
 
 export { addContent, editContent } from "./content_mgt.js";
 
-export { createCourse, editCourse, getCourses } from "./courses_mgt.js";
+export { createCourse, editCourse, getCourses,getPricesOfCourses } from "./courses_mgt.js";
 
 export { createScope, createRole } from "./rbac.js";
 export {
@@ -19,7 +21,7 @@ export {
 
 export {
   verifyEmail,
-  addPreference,
+  addPreferences,
   getPreferences,
   basicLogin,
   initiateEmailVerification,

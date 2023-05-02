@@ -44,7 +44,6 @@ router.use("/", async (req, res, next) => {
     }
     startLoginSession({ accountID, sessID, clientID }).catch(console.log);
     let { session: loginSession } = await getSessionData({ clientID, sessID });
-    console.log({ loginSession });
     if (loginSession.end_by < new Date()) {
       throw { msg: "Session already ended" };
     }

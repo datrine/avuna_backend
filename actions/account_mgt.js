@@ -160,7 +160,7 @@ const verifyEmail = async (email) => {
   return await verifyEmailMySQL(email);
 };
 
-const addPreference = async (obj) => {
+const addPreferences = async (obj) => {
   return await addPreferencesMySQL(obj);
 };
 
@@ -176,5 +176,5 @@ export {
   allSessionLogout,
   completePasswordChange,
   editProfile,
-  verifyEmail,addPreference,getPreferences
+  verifyEmail,addPreferences,getPreferences
 };

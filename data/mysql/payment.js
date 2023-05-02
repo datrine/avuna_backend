@@ -9,7 +9,7 @@ import { v4 as uuidV4 } from "uuid";
  * @param {string} regObj.itemID
  * @param {string} regObj.referenceID
  * @param {number} regObj.amount
- * @param {string} regObj.state
+ * @param {"initialized"|"pending"|"verifying"|"success"|"failed"|"cancelled"} regObj.state
  */
 let saveInitializedPayment = async ({
   accountID,
@@ -28,7 +28,8 @@ let saveInitializedPayment = async ({
       referenceID,
       state: { name: state, setOn: new Date() },
     });
-    return creationRes;
+    console.log({creationRes})
+    return paymentID;
   } catch (error) {
     console.log(error);
     throw { msg: error };

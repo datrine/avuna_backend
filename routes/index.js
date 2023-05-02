@@ -7,6 +7,8 @@ import { default as coursesRouter } from "./courses/index.js";
 import { default as contentsRouter } from "./content/index.js";
 import { default as businessesRouter } from "./businesses/index.js";
 import { default as preferencesRouter } from "./preferences/index.js";
+import { default as cartsRouter } from "./carts/index.js";
+import { default as paymentsRouter } from "./payments/index.js";
 import {
   emailRouter,
   authRouter,
@@ -25,6 +27,8 @@ router.use("/admin", avunaAdminsRouter);
 router.use("/login", loginRouter);
 router.use("/email", emailRouter);
 router.use("/access", accessRouter);
+router.use("/carts", cartsRouter);
+router.use("/payments", paymentsRouter);
 router.use("/test_auth", authRouter, (req, res, next) => {
   res.json({ test: true });
 });

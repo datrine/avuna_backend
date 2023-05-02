@@ -109,5 +109,4 @@ let paymentRequestSuccess = {
     created_at: "2019-06-21T15:25:42.000Z",
   },
 };
-Types;
 export { initializePaymentSuccess,paymentRequestSuccess };

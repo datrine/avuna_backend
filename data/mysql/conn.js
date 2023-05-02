@@ -150,6 +150,7 @@ knex.schema.hasTable("courses").then(function (exists) {
       t.string("title");
       t.string("desc");
       t.json("state");
+      t.decimal("price");
       t.enum("accessType",["full_free","triable","full_paid"]);
       t.boolean("isCertifiable");
       t.string("creatorID");
@@ -287,7 +288,7 @@ knex.schema.hasTable("carts").then(function (exists) {
       t.string("cartID").primary();
       t.string("accountID");
       t.decimal("price");
-      t.json("bag");
+      t.json("cart");
       t.json("state");
       t.json("stateHistory");
       t.timestamp("createdAt").defaultTo(knex.fn.now());

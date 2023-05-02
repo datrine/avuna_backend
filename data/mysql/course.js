@@ -7,18 +7,18 @@ import { checkPermissionMySQL } from "./rbac.js";
  *
  * @param {string} identifier
  */
-let createCourse = async ({creatorID, ...obj}) => {
+let createCourse = async ({ creatorID, ...obj }) => {
   let prom = new Promise(async (resolve, rej) => {
     knex.transaction(async function (trx) {
       try {
-        let { trx: trxFromHasPermission } =await checkPermissionMySQL(
+        let { trx: trxFromHasPermission } = await checkPermissionMySQL(
           { accountID: creatorID, permission: "can_create_course" },
           trx
         );
         trx = trxFromHasPermission;
         let courseID = uuidV4();
         await trx
-          .insert({ courseID, ...obj,creatorID })
+          .insert({ courseID, ...obj, creatorID })
           .into("courses")
           .on("query-error", function (error, obj) {
             logger.log("info", error);
@@ -27,7 +27,7 @@ let createCourse = async ({creatorID, ...obj}) => {
         resolve({ courseID });
       } catch (error) {
         console.log(error);
-        rej(error) ;
+        rej(error);
       }
     });
   });
@@ -36,48 +36,74 @@ let createCourse = async ({creatorID, ...obj}) => {
 
 let editCourse = async ({ editorID, ...obj }) => {
   let prom = new Promise(async (resolve, rej) => {
-  knex.transaction(async function (trx) {
-    try {
-      let { courseID, ...rest } = rest;
-      let { trx: trxFromHasPermission } = checkPermissionMySQL(
-        { accountID: editorID, permission: "can_edit_course" },
-        trx
-      );
-      trx = trxFromHasPermission;
-      let res = await trx("courses")
-        .update({ ...obj })
-        .where({ courseID })
-        .on("query-error", function (error, obj) {
-          logger.log("info", error);
-          rej({ msg: "Unknown error" });
-        });
-      resolve({ info: "Info " });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  });});
+    knex.transaction(async function (trx) {
+      try {
+        let { courseID, ...rest } = rest;
+        let { trx: trxFromHasPermission } = checkPermissionMySQL(
+          { accountID: editorID, permission: "can_edit_course" },
+          trx
+        );
+        trx = trxFromHasPermission;
+        let res = await trx("courses")
+          .update({ ...obj })
+          .where({ courseID })
+          .on("query-error", function (error, obj) {
+            logger.log("info", error);
+            rej({ msg: "Unknown error" });
+          });
+        resolve({ info: "Info " });
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    });
+  });
   return prom;
 };
 
 let getCourses = async ({ filters }) => {
   let prom = new Promise(async (resolve, rej) => {
-  knex.transaction(async function (trx) {
-    try {
-     /* let { courseID, ...rest } = rest;
+    knex.transaction(async function (trx) {
+      try {
+        /* let { courseID, ...rest } = rest;
       let { trx: trxFromHasPermission } = checkPermissionMySQL(
         { accountID: editorID, permission: "can_get_courses" },
         trx
       );
       trx = trxFromHasPermission; */
-      let courses = await trx("courses")
-        .select("*")
-      resolve({ courses });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  });});
-  return prom
+        let courses = await trx("courses").select("*");
+        resolve({ courses });
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    });
+  });
+  return prom;
 };
-export { createCourse as createCourseMySQL, editCourse as editCourseMySQL,getCourses as getCoursesMySQL };
+
+let getPricesOfCourses = async ({ courseIDs = [] }) => {
+  try {
+    let trx = await knex.transactionProvider()();
+
+    let filterStr = courseIDs.reduce(
+      (prev, current) => `${prev ? prev + "or " : prev} courseID='${current}' `,
+      ""
+    );
+    console.log({ filterStr });
+    let coursePriceObjs = await trx("courses")
+      .select("courseID", "price")
+      .whereRaw(`${filterStr}`);
+    return coursePriceObjs;
+  } catch (error) {
+    console.log({ error });
+    throw error;
+  }
+};
+
+export {
+  createCourse as createCourseMySQL,
+  editCourse as editCourseMySQL,
+  getCourses as getCoursesMySQL,
+  getPricesOfCourses as getPricesOfCoursesMySQL,
+};

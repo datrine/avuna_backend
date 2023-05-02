@@ -335,7 +335,7 @@ let checkPermission = async ({ accountID, role, permission }, trx) => {
       roleIDs = account.roleIDs;
     }
     if (!roleIDs) {
-      throw { msg: "No role" };
+      throw { msg: `Account has no role for permission '${permission}' `, };
     }
     for await (const roleID of roleIDs) {
       let results = await trx("roles").select("*").where({ roleID });
