@@ -9,6 +9,7 @@ import { default as businessesRouter } from "./businesses/index.js";
 import { default as preferencesRouter } from "./preferences/index.js";
 import { default as cartsRouter } from "./carts/index.js";
 import { default as paymentsRouter } from "./payments/index.js";
+import { default as enrollmentsRouter } from "./enrollments/index.js";
 import {
   emailRouter,
   authRouter,
@@ -29,6 +30,7 @@ router.use("/email", emailRouter);
 router.use("/access", accessRouter);
 router.use("/carts", cartsRouter);
 router.use("/payments", paymentsRouter);
+router.use("/enrollments", enrollmentsRouter);
 router.use("/test_auth", authRouter, (req, res, next) => {
   res.json({ test: true });
 });

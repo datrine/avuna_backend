@@ -1,22 +1,27 @@
 import { Router } from "express";
 import { authRouter } from "../../subroutes/index.js";
-import { getCartInfo } from "../../../actions/index.js";
+import {
+  getCartInfo,
+  updateSuccessfulPaymentInfo,
+} from "../../../actions/index.js";
 import { paymentRequestSuccess } from "../../../utils/templates/paystack.js";
 import { createHmac } from "node:crypto";
 const router = Router();
 
-router.get("/paystack/callback", async (req, res, next) => {
+router.get("/callback", async (req, res, next) => {
   try {
-    console.log(req.query)
-    res.status(200).end()
+    console.log(req.query);
+    let { reference: referenceID } = req.query;
+    await updateSuccessfulPaymentInfo({ referenceID });
+    res.status(200).end();
   } catch (error) {
     console.log(error);
   }
 });
 
-router.post("/paystack/webhook", async (req, res, next) => {
+router.post("/webhook", async (req, res, next) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const hash = createHmac("sha512", "secret")
       .update(JSON.stringify(req.body))
       .digest("hex");
@@ -31,7 +36,7 @@ router.post("/paystack/webhook", async (req, res, next) => {
         let paymentRequestSuccessCBBody = callbackBody;
       }
     }
-    res.status(200).end()
+    res.status(200).end();
   } catch (error) {
     console.log(error);
   }

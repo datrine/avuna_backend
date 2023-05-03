@@ -47,22 +47,24 @@ let getCartInfo = async (cartID) => {
 let updateItemStatus = async ({ accountID, cartID, itemID, status }) => {
   try {
     let trx = await knex.transactionProvider()();
-    let [cart] = await trx("carts")
+    let [cartInfo] = await trx("carts")
       .select("*")
       .whereRaw(`cartID='${cartID}' and accountID='${accountID}'`);
-    if (!cart) {
+    if (!cartInfo) {
       throw { msg: "cartID/accountID does not match record" };
     }
-    let items = cart.cart.items;
+    let cart = cartInfo.cart;
+    let items = cart.items;
+    console.log({ itemID });
     let indexOf = items.findIndex((item) => item.itemID === itemID);
-    if (!indexOf) {
+    if (indexOf === -1) {
       throw { msg: "itemID not found in cart" };
     }
     status = { name: status, setOn: new Date() };
     items[indexOf].status = status;
     cart.items = items;
-    cart = JSON.stringify(cart);
-    let { state: oldState, stateHistory = [] } = cart;
+
+    let { state: oldState, stateHistory } = cartInfo;
     let stateOfSome;
     for (const item of items) {
       if (item.status?.name === "fulfilled") {
@@ -71,6 +73,7 @@ let updateItemStatus = async ({ accountID, cartID, itemID, status }) => {
         stateOfSome = undefined;
       }
     }
+    console.log({ items });
     let state;
     if (stateOfSome === "fulfilled") {
       state = {};
@@ -79,10 +82,17 @@ let updateItemStatus = async ({ accountID, cartID, itemID, status }) => {
     } else {
       state = oldState;
     }
-    if (!stateHistory[stateHistory.length - 1].name === state.name) {
+    stateHistory = stateHistory || [];
+    if (!stateHistory[stateHistory.length - 1]?.name === state.name) {
       stateHistory.push(oldState);
     }
-    let updates = JSON.stringify({ cart, state, stateHistory });
+    let updates = JSON.parse(
+      JSON.stringify({
+        cart: JSON.stringify(cart),
+        state: JSON.stringify(state),
+        stateHistory: JSON.stringify(stateHistory),
+      })
+    );
     let updateRes = await trx("carts")
       .update({ ...updates })
       .where({ cartID, accountID });
@@ -93,8 +103,45 @@ let updateItemStatus = async ({ accountID, cartID, itemID, status }) => {
     throw error;
   }
 };
+
+let updateCartState = async ({ cartID, state }) => {
+  try {
+    let trx = await knex.transactionProvider()();
+    let [cartInfo] = await trx("carts")
+      .select("*")
+      .whereRaw(`cartID='${cartID}'`);
+    if (!cartInfo) {
+      throw { msg: "cartID does not match record" };
+    }
+    state = { name: state, setOn: new Date() };
+    let { state: oldState, stateHistory } = cartInfo;
+    stateHistory = stateHistory || [];
+    console.log({ stateHistory });
+    if (!stateHistory[stateHistory.length - 1]?.name === state.name) {
+      stateHistory.push(oldState);
+    }
+    let updates = JSON.parse(
+      JSON.stringify({
+        state: JSON.stringify(state),
+        stateHistory: JSON.stringify(stateHistory),
+      })
+    );
+    console.log({ updates });
+    let updateRes = await trx("carts")
+      .update({ ...updates })
+      .where({ cartID });
+    await trx.commit();
+    return { info: "cart state updated" };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export {
   createCart as createCartMySQL,
   getMyActiveCarts as getMyActiveCartsMySQL,
-  getCartInfo as getCartInfoMySQL,updateItemStatus as updateItemStatusMySQL
+  getCartInfo as getCartInfoMySQL,
+  updateItemStatus as updateItemStatusMySQL,
+  updateCartState as updateCartStateMySQL,
 };

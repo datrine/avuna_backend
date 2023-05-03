@@ -184,7 +184,7 @@ let startLoginSession = async ({
         } else {
           started_on = curTime;
         }
-        let end_by = DateTime.now().plus({ minute: 150 }).toJSDate();
+        let end_by = DateTime.now().plus({ day: 10 }).toJSDate();
         let duration = Interval.fromDateTimes(
           session.started_on || started_on,
           end_by

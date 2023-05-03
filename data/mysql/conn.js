@@ -274,6 +274,8 @@ knex.schema.hasTable("enrollments").then(function (exists) {
       t.string("enrollmentID").primary();
       t.string("accountID");
       t.string("courseID");
+      t.string("paymentID");
+      t.string("cartID");
       t.json("state");
       t.json("stateHistory");
       t.timestamp("start");

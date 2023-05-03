@@ -8,7 +8,7 @@ import knex from "./conn.js";
  * @param {string} obj.accountID
  *
  */
-let createEnrollment = async ({ courseID, state = "active", accountID }) => {
+let createEnrollment = async ({ courseID, state = "active", accountID,cartID,paymentID }) => {
   try {
     let enrollmentID = nanoid();
     state = JSON.stringify({ name: state, setOn: new Date() });
@@ -16,9 +16,9 @@ let createEnrollment = async ({ courseID, state = "active", accountID }) => {
       state,
       enrollmentID,
       accountID,
-      courseID,
+      courseID,paymentID,cartID
     });
-    return { info: "enrollment created", cartID };
+    return { info: "enrollment created", courseID };
   } catch (error) {
     console.log(error);
     throw error;
@@ -27,14 +27,16 @@ let createEnrollment = async ({ courseID, state = "active", accountID }) => {
 
 let getMyActiveEnrollments = async (accountID) => {
   try {
-    let carts = await knex("enrollments")
+    let enrollments = await knex("enrollments")
       .select("*")
       .whereRaw(
         ` JSON_EXTRACT(state, "$.name")='active' and accountID='${accountID}'`
       );
-    carts = carts.map((cart) => ({ ...cart.cart, cartID: cart.cartID }));
-    return carts;
-  } catch (error) {}
+    return enrollments;
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 };
 
 let getEnrollmentInfo = async (enrollmentID) => {

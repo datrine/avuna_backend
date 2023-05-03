@@ -18,6 +18,15 @@ const getMyActiveCarts = async (accountID) => {
   }
 };
 
+const updateCartState = async (...obj) => {
+  try {
+    return await updateCartStateMySQL(...obj);
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 const updateItemStatus = async (...obj) => {
   try {
     return await updateItemStatusMySQL(...obj);
@@ -35,4 +44,4 @@ const getCartInfo = async (cartID) => {
   }
 };
 
-export { createCart, getMyActiveCarts ,getCartInfo,updateItemStatus};
+export { createCart, getMyActiveCarts ,getCartInfo,updateItemStatus,updateCartState};

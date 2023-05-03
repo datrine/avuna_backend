@@ -4,6 +4,7 @@ import {
   createEnrollmentMySQL,
   getPaymentInfoByReferenceIDMySQL,
   saveInitializedPaymentMySQL,
+  updateCartStateMySQL,
 } from "../data/index.js";
 import fetch from "node-fetch";
 import { enrollToCourse } from "./courses_mgt.js";
@@ -57,23 +58,31 @@ let initiatePayment = async ({ accountID, email, amount, itemID }) => {
 let updateSuccessfulPaymentInfo = async ({ referenceID }) => {
   try{
 //get paymentInfo which matches referenceID
-    let paymentInfo=await getPaymentInfoByReferenceIDMySQL()
-    let {itemID:cartID}=paymentInfo;
-    let cart=await getCartInfo(cartID);
+    let paymentInfo=await getPaymentInfoByReferenceIDMySQL(referenceID)
+    let {itemID:cartID,paymentID}=paymentInfo;
+    //update cart state
+     await updateCartStateMySQL({cartID,state:"paid"})
+    let cartInfo=await getCartInfo(cartID);
+    let {accountID,cart}=cartInfo;
+    console.log({accountID,cart})
+    await sortPaidItems({cartItems:cart.items,accountID,cartID,paymentID})
+    return {info:"Payment processed and completed. "}
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-let sortPaidItems = async ({ cartItems = [], accountID, cartID }) => {
+
+let sortPaidItems = async ({ cartItems = [], accountID, cartID,paymentID }) => {
   try {
     for (const item of cartItems) {
-      if (item.type === "enrollment") {
+      console.log({item})
+      if (item.type === "enrollment"&&item.status?.name!=="fulfilled") {
         //create enrollment
         let responseOfEnrollment = await enrollToCourse({
           courseID: item.itemID,
-          accountID,
-          state: "active",
+          accountID,paymentID,
+          state: "active",cartID
         });
         //mark item as fulfilled
         let updateRes = await updateItemStatus({
@@ -82,6 +91,7 @@ let sortPaidItems = async ({ cartItems = [], accountID, cartID }) => {
           cartID,
           status: "fulfilled",
         });
+
       }
     }
   } catch (error) {
@@ -89,4 +99,4 @@ let sortPaidItems = async ({ cartItems = [], accountID, cartID }) => {
     throw error;
   }
 };
-export { initiatePayment };
+export { initiatePayment,updateSuccessfulPaymentInfo };
