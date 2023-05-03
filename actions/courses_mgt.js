@@ -1,5 +1,8 @@
-import { createCourseMySQL, createEnrollmentMySQL, editCourseMySQL, getCoursesMySQL, getMyActiveEnrollmentsMySQL, getPricesOfCoursesMySQL } from "../data/index.js"
+import { createCourseMySQL, createEnrollmentMySQL, editCourseMySQL, enrollCourseMySQL, getCourseByCourseIDMySQL, getCoursesMySQL, getMyActiveEnrollmentsMySQL, getPricesOfCoursesMySQL } from "../data/index.js"
 
+let getCourseByCourseID=async(courseID)=>{
+    return await getCourseByCourseIDMySQL(courseID)
+}
 let createCourse=async(obj)=>{
     return await createCourseMySQL(obj)
 }
@@ -15,10 +18,15 @@ let getPricesOfCourses=async({courseIDs})=>{
     return await getPricesOfCoursesMySQL({courseIDs})
 }
 
-let enrollToCourse=async(...obj)=>{
+let enrollPaidCourse=async(...obj)=>{
     return await createEnrollmentMySQL(...obj)
 }
+
+let enrollCourse=async(...obj)=>{
+    return await enrollCourseMySQL(...obj)
+}
+
 let getActiveEnrollments=async(...obj)=>{
 return await getMyActiveEnrollmentsMySQL(...obj)
 }
-export {createCourse,editCourse,getCourses,getPricesOfCourses,enrollToCourse,getActiveEnrollments}
+export {createCourse,editCourse,getCourses,getPricesOfCourses,enrollPaidCourse,enrollCourse,getActiveEnrollments,getCourseByCourseID}

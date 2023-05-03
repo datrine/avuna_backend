@@ -7,7 +7,7 @@ import {
   updateCartStateMySQL,
 } from "../data/index.js";
 import fetch from "node-fetch";
-import { enrollToCourse } from "./courses_mgt.js";
+import { enrollPaidCourse } from "./courses_mgt.js";
 import { getCartInfo, updateItemStatus } from "./cart_mgt.js";
 
 let initiatePayment = async ({ accountID, email, amount, itemID }) => {
@@ -24,7 +24,7 @@ let initiatePayment = async ({ accountID, email, amount, itemID }) => {
         },
         body: JSON.stringify({
           email,
-          amount: amount * 100,
+          amount:Math.round( amount*100),
           reference,
           callback_url: `${process.env.SERVER_URL}/api/payments/paystack/callback`,
         }),
@@ -47,7 +47,6 @@ let initiatePayment = async ({ accountID, email, amount, itemID }) => {
     });
     //update cart state
 
-
     return { ...data, paymentID };
   } catch (error) {
     console.log(error);
@@ -56,33 +55,45 @@ let initiatePayment = async ({ accountID, email, amount, itemID }) => {
 };
 
 let updateSuccessfulPaymentInfo = async ({ referenceID }) => {
-  try{
-//get paymentInfo which matches referenceID
-    let paymentInfo=await getPaymentInfoByReferenceIDMySQL(referenceID)
-    let {itemID:cartID,paymentID}=paymentInfo;
+  try {
+    //get paymentInfo which matches referenceID
+    let paymentInfo = await getPaymentInfoByReferenceIDMySQL(referenceID);
+    let { itemID: cartID, paymentID } = paymentInfo;
     //update cart state
-     await updateCartStateMySQL({cartID,state:"paid"})
-    let cartInfo=await getCartInfo(cartID);
-    let {accountID,cart}=cartInfo;
-    console.log({accountID,cart})
-    await sortPaidItems({cartItems:cart.items,accountID,cartID,paymentID})
-    return {info:"Payment processed and completed. "}
+    await updateCartStateMySQL({ cartID, state: "paid" });
+    let cartInfo = await getCartInfo(cartID);
+    let { accountID, cart } = cartInfo;
+    console.log({ accountID, cart });
+    await sortPaidItems({
+      cartItems: cart.items,
+      accountID,
+      cartID,
+      paymentID,
+    });
+    return { info: "Payment processed and completed. " };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-let sortPaidItems = async ({ cartItems = [], accountID, cartID,paymentID }) => {
+let sortPaidItems = async ({
+  cartItems = [],
+  accountID,
+  cartID,
+  paymentID,
+}) => {
   try {
     for (const item of cartItems) {
-      console.log({item})
-      if (item.type === "enrollment"&&item.status?.name!=="fulfilled") {
+      console.log({ item });
+      if (item.type === "enrollment" && item.status?.name !== "fulfilled") {
         //create enrollment
-        let responseOfEnrollment = await enrollToCourse({
+        let responseOfEnrollment = await enrollPaidCourse({
           courseID: item.itemID,
-          accountID,paymentID,
-          state: "active",cartID
+          accountID,
+          paymentID,
+          state: "active",
+          cartID,
         });
         //mark item as fulfilled
         let updateRes = await updateItemStatus({
@@ -91,7 +102,6 @@ let sortPaidItems = async ({ cartItems = [], accountID, cartID,paymentID }) => {
           cartID,
           status: "fulfilled",
         });
-
       }
     }
   } catch (error) {
@@ -99,4 +109,4 @@ let sortPaidItems = async ({ cartItems = [], accountID, cartID,paymentID }) => {
     throw error;
   }
 };
-export { initiatePayment,updateSuccessfulPaymentInfo };
+export { initiatePayment, updateSuccessfulPaymentInfo };

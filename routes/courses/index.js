@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { createCourse, editCourse, getCourses } from "../../actions/index.js";
+import { createCourse, editCourse, getCourses, getLessons } from "../../actions/index.js";
 import { courseValidator } from "../../utils/validate/index.js";
 import { authRouter } from "../subroutes/index.js";
+import { default as contentsRouter } from "../content/index.js";
 const router = Router();
 router.post("/create", authRouter, async (req, res, next) => {
   try {
@@ -9,6 +10,12 @@ router.post("/create", authRouter, async (req, res, next) => {
 
     let regObj = req.body;
     //validate each property
+    if (regObj.price && !regObj.accessType) {
+      regObj.accessType = "full_paid";
+    }
+    if (!regObj.price) {
+      regObj.price = 0;
+    }
     let validationResponse = courseValidator({
       ...regObj,
     });
@@ -26,7 +33,7 @@ router.post("/create", authRouter, async (req, res, next) => {
     res.json(createRes);
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400);
     res.json(error);
   }
 });
@@ -52,8 +59,19 @@ router.use("/:courseID/edit", authRouter, async (req, res, next) => {
     let createRes = await editCourse({ ...info, editorID: account.accountID });
     res.json(createRes);
   } catch (error) {
-    res.status=400
-    res.json({err:error})
+    res.status(400);
+    res.json({ err: error });
+  }
+});
+
+router.get("/:courseID/contents", async (req, res, next) => {
+  try {
+    let{courseID}=req.params
+    let lessons = await getLessons({courseID});
+    res.json(lessons);
+  } catch (error) {
+    res.status(400);
+    res.json({ err: error });
   }
 });
 
@@ -63,11 +81,11 @@ router.get("/", authRouter, async (req, res, next) => {
 
     let regObj = req.body;
     //validate each property
-    let validationResponse =await getCourses({});
+    let validationResponse = await getCourses({});
     res.json(validationResponse);
   } catch (error) {
     console.log(error);
-    res.status=400
+    res.status(400);
     res.json(error);
   }
 });

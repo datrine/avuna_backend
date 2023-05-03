@@ -16,17 +16,15 @@ let addContent = async ({ creatorID, ...obj }) => {
           trx
         );
         trx = trxFromHasPermission;
-        console.log({obj})
+        console.log({ obj });
         let [course] = await trx("courses")
           .select("*")
           .where({ courseID: obj.courseID });
-          if (!course) {
-            throw "No course matches"
-          }
+        if (!course) {
+          throw "No course matches";
+        }
         let contentID = uuidV4();
-        await trx
-          .insert({ contentID, ...obj, creatorID })
-          .into("content")
+        await trx.insert({ contentID, ...obj, creatorID }).into("content");
         resolve({ contentID });
       } catch (error) {
         console.log(error);
@@ -60,4 +58,21 @@ let editContent = async ({ editorID, ...obj }) => {
     }
   });
 };
-export { addContent as addContentMySQL, editContent as editContentMySQL };
+
+let getLessons = async (obj) => {
+  try {
+    console.log(obj);
+    let lessons = await knex("content")
+      .select("*")
+      .where({ ...obj });
+      return lessons
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+export {
+  addContent as addContentMySQL,
+  editContent as editContentMySQL,
+  getLessons as getLessonsMySQL,
+};

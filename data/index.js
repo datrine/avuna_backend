@@ -1,4 +1,6 @@
-export { createEnrollmentMySQL,getEnrollmentInfoMySQL,getMyActiveEnrollmentsMySQL, } from "./mysql/enrollment.js";
+export { getCourseByCourseIDMySQL } from "./mysql/course.js";
+
+export { createEnrollmentMySQL,getEnrollmentInfoMySQL,getMyActiveEnrollmentsMySQL,enrollCourseMySQL } from "./mysql/enrollment.js";
 
 export { createCartMySQL ,getMyActiveCartsMySQL,getCartInfoMySQL,updateItemStatusMySQL,updateCartStateMySQL} from "./mysql/cart.js";
 
@@ -8,7 +10,7 @@ export { addPreferencesMySQL ,getPreferencesMySQL} from "./mysql/account.js";
 
 export { createBusinessMySQL,editBusinessMySQL } from "./mysql/business.js";
 
-export { addContentMySQL,editContentMySQL } from "./mysql/content.js";
+export { addContentMySQL,editContentMySQL,getLessonsMySQL } from "./mysql/content.js";
 export { createCourseMySQL, editCourseMySQL ,getCoursesMySQL,getPricesOfCoursesMySQL} from "./mysql/course.js";
 
 export {

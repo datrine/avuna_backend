@@ -12,6 +12,9 @@ router.post("/pay", authRouter, async (req, res, next) => {
     let { accountID, account_type } = req.session.self.account;
     let { cartID, shippingInfo } = req.body;
     let cartInfo = await getCartInfo(cartID);
+    if (!cartInfo?.cart.totalPrice) {
+      return res.json({info:"No price on items. Possibly free items."})
+    }
     let shippingEmail = shippingInfo?.email;
     let initiateRes = await initiatePayment({
       accountID,

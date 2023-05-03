@@ -4,9 +4,9 @@ export { createCart,getMyActiveCarts ,getCartInfo,updateItemStatus} from "./cart
 
 export { editBusiness, createBusiness } from "./business_mgt.js";
 
-export { addContent, editContent } from "./content_mgt.js";
+export { addContent, editContent ,getLessons} from "./content_mgt.js";
 
-export { createCourse, editCourse, getCourses,getPricesOfCourses,getActiveEnrollments,enrollToCourse, } from "./courses_mgt.js";
+export { createCourse, editCourse, getCourses,getPricesOfCourses,getActiveEnrollments,enrollPaidCourse,enrollCourse,getCourseByCourseID } from "./courses_mgt.js";
 
 export { createScope, createRole } from "./rbac.js";
 export {

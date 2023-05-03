@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addContent, createRole, createScope } from "../../actions/index.js";
+import { addContent, createRole, createScope, getCourseByCourseID } from "../../actions/index.js";
 import { authRouter, registerRouter } from "../subroutes/index.js";
 import multer from "multer";
 import {
@@ -18,6 +18,11 @@ router.post(
     try {
       let { accountID } = req.session.self.account;
       let { courseID, desc, title, mode = "publish" } = req.body;
+      let course=await getCourseByCourseID(courseID)
+      if (!course) {
+        throw {msg:"No courseID matches"}
+      }
+      let {category:courseCategory}=course
       let files = req.files;
       let media = [];
       for (const fl of files) {
@@ -36,7 +41,7 @@ router.post(
           console.log({ uploadRes });
           let mediaItem = {
             size,
-            name: key,
+            name: filename,
             mimetype,
              key,
           };
@@ -49,7 +54,7 @@ router.post(
         courseID,
         desc,
         title,
-        mode,
+        mode,courseCategory,
         media:JSON.stringify(media),
       });
       let { contentID } = resDB;
@@ -62,13 +67,10 @@ router.post(
   }
 );
 
-router.get("/content", authRouter, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    let { ...roleObj } = req.body;
-    let { accountID } = req.session.self.account;
-    console.log({ roleObj, accountID });
-    let { roleID } = await createRole({ ...roleObj, creatorID: accountID });
-    res.json({ roleID });
+    let {courseID} = req.query;
+    console.log({params})
   } catch (error) {
     console.log(error);
     res.status(400)
