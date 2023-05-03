@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { authRouter, emailRouter, loginRouter, logoutRouter, registerRouter } from "../subroutes/index.js";
+import { emailRouter, loginRouter, logoutRouter, registerRouter } from "../subroutes/index.js";
 const router =Router();
 router.use("/register",async(req,res,next)=>{
     req.body={...req.body,account_type:"student"}
