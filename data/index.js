@@ -1,6 +1,8 @@
-export { createCartMySQL ,getMyActiveCartsMySQL,getCartInfoMySQL} from "./mysql/cart.js";
+export { createEnrollmentMySQL,getEnrollmentInfoMySQL,getMyActiveEnrollmentsMySQL, } from "./mysql/enrollment.js";
 
-export { updateStateMySQL,saveInitializedPaymentMySQL } from "./mysql/payment.js";
+export { createCartMySQL ,getMyActiveCartsMySQL,getCartInfoMySQL,updateItemStatusMySQL} from "./mysql/cart.js";
+
+export { updateStateMySQL,saveInitializedPaymentMySQL,getPaymentInfoByReferenceIDMySQL } from "./mysql/payment.js";
 
 export { addPreferencesMySQL ,getPreferencesMySQL} from "./mysql/account.js";
 

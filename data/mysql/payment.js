@@ -72,8 +72,19 @@ let updateState = async ({ paymentID,referenceID, state }) => {
     throw { msg: error };
   }
 };
-
+let getPaymentInfoByReferenceID=async(referenceID)=>{
+  try {
+   let[paymentInfo]= await knex("payments").select("*").where({referenceID})
+   if (!paymentInfo) {
+    throw {msg:"No referenceID matches record"}
+   }
+   return paymentInfo
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 export {
   saveInitializedPayment as saveInitializedPaymentMySQL,
-  updateState as updateStateMySQL,
+  updateState as updateStateMySQL, getPaymentInfoByReferenceID as getPaymentInfoByReferenceIDMySQL
 };

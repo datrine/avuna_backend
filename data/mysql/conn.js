@@ -274,8 +274,10 @@ knex.schema.hasTable("enrollments").then(function (exists) {
       t.string("enrollmentID").primary();
       t.string("accountID");
       t.string("courseID");
-      t.decimal("price");
       t.json("state");
+      t.json("stateHistory");
+      t.timestamp("start");
+      t.timestamp("end");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
     });

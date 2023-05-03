@@ -1,4 +1,4 @@
-import { createCartMySQL, getCartInfoMySQL, getMyActiveCartsMySQL } from "../data/index.js";
+import { createCartMySQL, getCartInfoMySQL, getMyActiveCartsMySQL, updateItemStatusMySQL } from "../data/index.js";
 
 const createCart = async (...obj) => {
   try {
@@ -17,6 +17,15 @@ const getMyActiveCarts = async (accountID) => {
     return error;
   }
 };
+
+const updateItemStatus = async (...obj) => {
+  try {
+    return await updateItemStatusMySQL(...obj);
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 const getCartInfo = async (cartID) => {
   try {
     return await getCartInfoMySQL(cartID);
@@ -26,4 +35,4 @@ const getCartInfo = async (cartID) => {
   }
 };
 
-export { createCart, getMyActiveCarts ,getCartInfo};
+export { createCart, getMyActiveCarts ,getCartInfo,updateItemStatus};

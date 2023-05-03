@@ -1,4 +1,4 @@
-export { createCart,getMyActiveCarts ,getCartInfo} from "./cart_mgt.js";
+export { createCart,getMyActiveCarts ,getCartInfo,updateItemStatus} from "./cart_mgt.js";
 
 export { editBusiness, createBusiness } from "./business_mgt.js";
 

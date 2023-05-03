@@ -101,6 +101,16 @@ let getPricesOfCourses = async ({ courseIDs = [] }) => {
   }
 };
 
+let enrollToCourseMySQL=async({courseID,})=>{
+  try {
+    let trx=await knex.transactionProvider()()
+    trx("courses").select("*").where({courseID});
+    
+  } catch (error) {
+    
+  }
+}
+
 export {
   createCourse as createCourseMySQL,
   editCourse as editCourseMySQL,
