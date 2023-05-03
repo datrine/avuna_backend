@@ -1,10 +1,18 @@
 import { Router } from "express";
 import { editProfile } from "../../../actions/account_mgt.js";
+import { authRouter } from "../../subroutes/index.js";
 const router = Router();
 router.use("/", async (req, res, next) => {
   let selfAccount = req.session.self.account;
   let queriedAccount = req.session.queried.account;
   next();
+});
+router.get("/", async (req, res, next) => {
+  let { account: selfAccount, userBio } = req.session.self;
+  let { pass_hash, accountID, ...restOfAccount } = selfAccount;
+  console.log({userBio})
+  let accountInfo = { ...restOfAccount, ...userBio, accountID };
+  return res.json(accountInfo);
 });
 router.post("/edit", async (req, res, next) => {
   try {
