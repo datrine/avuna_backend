@@ -59,9 +59,13 @@ let getUserBioByAccountID = async (accountID) => {
         rej({ msg: "Unknown error" });
       })
       .then((response) => {
-        console.log(response);
         let userBio = response[0];
         userBio = { ...userBio, isEmailVerified: !!userBio.isEmailVerified };
+        let prof_pic_path = userBio.prof_pic_info?.key;
+        prof_pic_path = prof_pic_path
+          ? `${process.env.SERVER_URL}/api/media/${userBio.prof_pic_info.key}`
+          : "";
+        userBio.prof_pic_path = prof_pic_path;
         resolve(userBio);
       })
       .catch((err) => {
@@ -71,9 +75,16 @@ let getUserBioByAccountID = async (accountID) => {
   });
   return prom;
 };
-let editUserBio = async ({editorID, accountID, updates}) => {
+
+let editUserBio = async ({ editorID, accountID, updates }) => {
   try {
-    console.log({updates})
+    console.log({ updates });
+    let hasCol = await knex.schema.hasColumn("user_bios", "prof_pic_info");
+    if (!hasCol) {
+      await knex.schema.alterTable("user_bios", function (table) {
+        table.json("prof_pic_info");
+      });
+    }
     let updateRes = await knex("user_bios")
       .update({ ...updates })
       .where({ accountID });

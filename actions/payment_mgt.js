@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { initializePaymentSuccess } from "../utils/templates/paystack.js";
+import { initializePaymentSuccess, successfulVerification } from "../utils/templates/paystack.js";
 import {
   createEnrollmentMySQL,
   getPaymentInfoByReferenceIDMySQL,
@@ -109,4 +109,34 @@ let sortPaidItems = async ({
     throw error;
   }
 };
-export { initiatePayment, updateSuccessfulPaymentInfo };
+
+let verifyPayment = async ({ referenceID }) => {
+  try {
+    let response = await fetch(
+      `https://api.paystack.co/transaction/verify/${referenceID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        }
+      }
+    );
+    if (!response.ok) {
+      throw await response.text()
+    }
+    
+    /**
+     * @type {successfulVerification}
+     */
+    let data=await response.json()
+   let status= data.data.status
+    return status;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+let getUnverifiedPayments = async () => {
+  return await getUnverifiedPaymentsMySQL()
+};
+export { initiatePayment, updateSuccessfulPaymentInfo,verifyPayment,getUnverifiedPayments };

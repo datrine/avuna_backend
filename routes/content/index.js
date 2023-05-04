@@ -31,10 +31,9 @@ router.post(
         let key = nanoid()+`.${ext}`;
         let processUpload = async ({ buffer, key }) => {
           let uploadRes;
-          let upTo5 = 5 * 1024 * 1024 >= buffer.byteLength;
+          let upTo5 = 5 * 1024 * 1024 <= buffer.byteLength;
           if (upTo5) {
             uploadRes = await uploadHeavyContent({ buffer, filename: key ,contentType:mimetype});
-            uploadRes.Key;
           } else {
             uploadRes = await uploadLightContent({ buffer, filename: key ,contentType:mimetype});
           }

@@ -13,6 +13,7 @@ import {
 } from "../../queries/index.js";
 import { getSessionDataMySQL } from "../../data/mysql/session.js";
 const router = Router();
+
 router.get("/refresh_token", async (req, res, next) => {
   try {
     let { refresh_token } = req.query;
