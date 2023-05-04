@@ -10,12 +10,14 @@ import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { open } from "node:fs/promises";
 import path from "path";
 
-export const streamFromS3 = async function* () {
+export const generatorFnFromS3 = async function* ({
+  key = "baerbock-in-china-can-she-root-european-uncerta.mp4",
+}) {
   const client = new S3Client({ region: "us-east-1" });
   let streaming = true;
   const command = new GetObjectCommand({
     Bucket: "avunabucket",
-    Key: "baerbock-in-china-can-she-root-european-uncerta.mp4",
+    Key: key,
   });
   let executor = async (res, rej) => {
     try {
@@ -44,22 +46,36 @@ export const streamFromS3 = async function* () {
   }
 };
 
+export const streamFromS3 = async function ({
+  key = "baerbock-in-china-can-she-root-european-uncerta.mp4",
+}) {
+  const client = new S3Client({ region: "us-east-1" });
+  let streaming = true;
+  const command = new GetObjectCommand({
+    Bucket: "avunabucket",
+    Key: key,
+  });
+      const response = await client.send(command);
+      return response.Body
+};
 export const httpPartialStreamFromS3 = async function ({
   startRange,
   endRange,
+  key = "baerbock-in-china-can-she-root-european-uncerta.mp4",
 }) {
-  endRange=endRange-1
+  endRange = endRange - 1;
   const client = new S3Client({ region: "us-east-1" });
   let range = `bytes=${startRange}-${endRange}`;
   console.log(range);
   const command = new GetObjectCommand({
     Bucket: "avunabucket",
-    Key: "baerbock-in-china-can-she-root-european-uncerta.mp4",
+    Key: key,
     Range: range,
   });
   const response = await client.send(command);
-  let contentLength = response.ContentLength+1;
-  let contentRange = response.ContentRange||`bytes ${startRange}-${contentLength}/*`;
+  let contentLength = response.ContentLength + 1;
+  let contentRange =
+    response.ContentRange || `bytes ${startRange}-${contentLength}/*`;
   let contentType = response.ContentType;
   let acceptRanges = response.ContentType;
   /*  let prom = new Promise(async (res, rej) => {
@@ -117,7 +133,10 @@ export const videoPartialStream = async function ({ startRange, endRange }) {
     }
   }); */
 
-  let contentRange = `bytes ${startRange}-${ Math.min(endRange, fileSize)}/${fileSize}`;
+  let contentRange = `bytes ${startRange}-${Math.min(
+    endRange,
+    fileSize
+  )}/${fileSize}`;
   let contentLength = Math.min(endRange, fileSize) - startRange;
   let contentType = "video/mp4";
   let acceptRanges = "bytes";
