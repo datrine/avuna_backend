@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { editProfile } from "../../../actions/account_mgt.js";
-import { authRouter } from "../../subroutes/index.js";
 import multer from "multer";
 import { nanoid } from "nanoid";
 import {

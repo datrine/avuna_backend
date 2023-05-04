@@ -17,6 +17,7 @@ router.post(
   let creatorID=account.accountID;
 
   let creationRes=await  createBusiness({name,sector,phone_num,size,creatorID})
+  res.json({info:"Business created"})
     } catch (error) {
       console.log(error)
       res.status(400)
