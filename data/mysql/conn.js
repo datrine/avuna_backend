@@ -169,6 +169,7 @@ knex.schema.hasTable("content").then(function (exists) {
       t.string("courseCategory");
       t.string("title");
       t.string("desc");
+      t.double("duration");
       t.json("media");
       t.string("creatorID");
       t.enum("mode",["publish","draft"]);

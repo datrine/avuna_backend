@@ -12,7 +12,7 @@ import {
 } from "./aws/s3/streamFromS3.js";
 import { pipeline } from "stream";
 import { createReadStream, fstatSync } from "fs";
-import getVideoCodecInfo from "./utils/video.js";
+//import getVideoCodecInfo from "./utils/video.js";
 import { open } from "fs/promises";
 import path from "path";
 config();
