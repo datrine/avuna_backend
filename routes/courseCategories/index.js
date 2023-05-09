@@ -27,4 +27,5 @@ router.get("/", authRouter, async (req, res, next) => {
     res.json({ err: error });
   }
 });
+
 export default router;
