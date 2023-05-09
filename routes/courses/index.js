@@ -3,6 +3,7 @@ import { createCourse, editCourse, getCourses, getLessons } from "../../actions/
 import { courseValidator } from "../../utils/validate/index.js";
 import { authRouter } from "../subroutes/index.js";
 import { default as contentsRouter } from "../content/index.js";
+import { default as courseCategoriesRouter } from "../courseCategories/index.js";
 const router = Router();
 router.post("/create", authRouter, async (req, res, next) => {
   try {
@@ -37,6 +38,8 @@ router.post("/create", authRouter, async (req, res, next) => {
     res.json(error);
   }
 });
+
+router.use("/categories/", courseCategoriesRouter);
 
 router.use("/:courseID/edit", authRouter, async (req, res, next) => {
   try {

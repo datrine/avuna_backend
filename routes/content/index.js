@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { addContent, createRole, createScope, getCourseByCourseID } from "../../actions/index.js";
+import {
+  addContent,
+  createRole,
+  createScope,
+  getCourseByCourseID,
+} from "../../actions/index.js";
 import { authRouter, registerRouter } from "../subroutes/index.js";
 import multer from "multer";
 import {
@@ -18,31 +23,39 @@ router.post(
     try {
       let { accountID } = req.session.self.account;
       let { courseID, desc, title, mode = "publish" } = req.body;
-      let course=await getCourseByCourseID(courseID)
+      let course = await getCourseByCourseID(courseID);
       if (!course) {
-        throw {msg:"No courseID matches"}
+        throw { msg: "No courseID matches" };
       }
-      let {category:courseCategory}=course
+      let { category: courseCategory } = course;
       let files = req.files;
       let media = [];
       for (const fl of files) {
         let { buffer, originalname: filename, mimetype, size } = fl;
-        let ext=filename.split(".")[1]
-        let key = nanoid()+`.${ext}`;
+        let ext = filename.split(".")[1];
+        let key = nanoid() + `.${ext}`;
         let processUpload = async ({ buffer, key }) => {
           let uploadRes;
           let upTo5 = 5 * 1024 * 1024 <= buffer.byteLength;
           if (upTo5) {
-            uploadRes = await uploadHeavyContent({ buffer, filename: key ,contentType:mimetype});
+            uploadRes = await uploadHeavyContent({
+              buffer,
+              filename: key,
+              contentType: mimetype,
+            });
           } else {
-            uploadRes = await uploadLightContent({ buffer, filename: key ,contentType:mimetype});
+            uploadRes = await uploadLightContent({
+              buffer,
+              filename: key,
+              contentType: mimetype,
+            });
           }
           console.log({ uploadRes });
           let mediaItem = {
             size,
             name: filename,
             mimetype,
-             key,
+            key,
           };
           media.push(mediaItem);
         };
@@ -53,26 +66,27 @@ router.post(
         courseID,
         desc,
         title,
-        mode,courseCategory,
-        media:JSON.stringify(media),
+        mode,
+        courseCategory,
+        media: JSON.stringify(media),
       });
       let { contentID } = resDB;
       res.json({ contentID, info: "content saved" });
     } catch (error) {
       console.log(error);
-      res.status(400)
-      res.json({err:error});
+      res.status(400);
+      res.json({ err: error });
     }
   }
 );
 
 router.get("/", async (req, res, next) => {
   try {
-    let {courseID} = req.query;
-    console.log({params})
+    let { courseID } = req.query;
+    console.log({ params });
   } catch (error) {
     console.log(error);
-    res.status(400)
+    res.status(400);
     res.json(error);
   }
 });

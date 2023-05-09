@@ -104,18 +104,38 @@ let getPricesOfCourses = async ({ courseIDs = [] }) => {
 let getCourseByCourseID = async (courseID) => {
   try {
     let [course] = await knex("courses").select("*").where({ courseID });
-    console.log({ course ,courseID});
+    console.log({ course, courseID });
     return course;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
+let getCategories = async () => {
+  try {
+    let courses = await knex("courses").distinct("category");
+    return courses.map((obj) => obj.category);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
+let getCoursesInCategory = async (category) => {
+  try {
+    let courses = await knex("courses").select("*").where({ category });
+    return courses;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 export {
   createCourse as createCourseMySQL,
   editCourse as editCourseMySQL,
   getCourses as getCoursesMySQL,
   getPricesOfCourses as getPricesOfCoursesMySQL,
   getCourseByCourseID as getCourseByCourseIDMySQL,
+  getCoursesInCategory as getCoursesInCategoryMySQL,
+  getCategories as getCategoriesMySQL,
 };
