@@ -37,7 +37,7 @@ knex.schema.hasTable("user_bios").then(function (exists) {
       t.string("f_name");
       t.string("l_name");
       t.enum("sex", ["male", "female"]);
-      t.enum("age_range",["20-29","30-39","40-49"]);
+      t.string("age_range");
       t.string("country");
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
