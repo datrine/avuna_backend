@@ -45,7 +45,7 @@ router.post(
           country,
           prof_pic_info:JSON.stringify(prof_pic_info),
         };
-        updates = JSON.parse(JSON.stringify(updates));
+        updates = JSON.parse(JSON.stringify(...updates));
         console.log(updates);
         let responseOfEdit = await editProfile({
           editorID,
