@@ -8,7 +8,21 @@ import {
 import {
   getAccountByEmailAddress,
 } from "../../queries/index.js";
+import { authRouter } from "./index.js";
 const router = Router();
+
+router.post("/change",authRouter, async (req, res, next) => {
+  try {
+    let {email}=req.session.self.account
+    let { password } = req.body;
+    let resOf = await completePasswordChange({ email,password });
+    res.json(resOf);
+  } catch (error) {
+    console.log(error);
+    res.status(400)
+    res.json({ err: error });
+  }
+});
 router.get("/recovery/request", async (req, res, next) => {
   try {
     let { email } = req.query;
