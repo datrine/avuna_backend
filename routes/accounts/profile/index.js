@@ -45,7 +45,18 @@ router.post(
           country,
           prof_pic_info:JSON.stringify(prof_pic_info),
         };
-        updates = JSON.parse(JSON.stringify(...updates));
+
+        if (!updates.f_name) {
+          delete updates.f_name
+        }
+        if (!updates.sex||(updates.sex!=="female"&&updates.sex!=="male")) {
+          delete updates.sex
+        }
+      
+        if (!updates.country) {
+          delete updates.country
+        }
+        updates = JSON.parse(JSON.stringify(updates));
         console.log(updates);
         let responseOfEdit = await editProfile({
           editorID,
