@@ -94,6 +94,7 @@ let getPricesOfCourses = async ({ courseIDs = [] }) => {
     let coursePriceObjs = await trx("courses")
       .select("courseID", "price")
       .whereRaw(`${filterStr}`);
+      await trx.commit();
     return coursePriceObjs;
   } catch (error) {
     console.log({ error });
@@ -114,6 +115,7 @@ let getCourseByCourseID = async (courseID) => {
 let getCategories = async () => {
   try {
     let courses = await knex("courses").distinct("category");
+    
     return courses.map((obj) => obj.category);
   } catch (error) {
     console.log(error);

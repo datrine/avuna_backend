@@ -97,6 +97,7 @@ let updateItemStatus = async ({ accountID, cartID, itemID, status }) => {
       .update({ ...updates })
       .where({ cartID, accountID });
     await trx.commit();
+    
     return { info: "item state updated" };
   } catch (error) {
     console.log(error);

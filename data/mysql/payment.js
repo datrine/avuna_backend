@@ -66,6 +66,7 @@ let updateState = async ({ paymentID,referenceID, state }) => {
         stateHistory: JSON.stringify(stateHistory),
       })
       .where({ paymentID }).orWhere({referenceID});
+      await trx.commit();
     return updateRes;
   } catch (error) {
     console.log(error);

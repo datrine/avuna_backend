@@ -201,6 +201,7 @@ let getPreferences = async (accountID) => {
       .where({ accountID });
     let { accountID: accID, ...rest } = preferenceInfo;
     preferenceInfo = { ...rest };
+    await trx.commit();
     return preferenceInfo;
   } catch (error) {
     console.log(error);
