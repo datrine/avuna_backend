@@ -434,6 +434,7 @@ let getPermissions = async (filters, trx) => {
     throw error
   }
 };
+
 export {
   createPermission as createPermissionMySQL,
   addScopesToPermission as addScopeMySQL,
@@ -445,3 +446,5 @@ export {
   deleteRole as deleteRoleMySQL,
   addScopesToPermission as addScopesToPermissionMySQL,getPermissions as getPermissionsMySQL
 };
+
+

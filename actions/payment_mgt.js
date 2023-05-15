@@ -86,7 +86,10 @@ let sortPaidItems = async ({
   try {
     for (const item of cartItems) {
       console.log({ item });
-      if (item.type === "enrollment" && item.status?.name !== "fulfilled") {
+      if (item.status?.name === "fulfilled") {
+        return
+      }
+      if (item.type === "course" && item.action==="enrollment") {
         //create enrollment
         let responseOfEnrollment = await enrollPaidCourse({
           courseID: item.itemID,
