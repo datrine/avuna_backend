@@ -158,6 +158,14 @@ knex.schema.hasTable("courses").then(function (exists) {
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
     });
+  }else{
+    knex.schema.hasColumn("courses","media").then(hasCol=>{
+      if (!hasCol) {
+       return knex.schema.alterTable('courses', function (table) {
+        table.json('media');
+      })
+      }
+    })
   }
 });
 

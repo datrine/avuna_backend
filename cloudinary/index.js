@@ -6,9 +6,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
   });
 async function processUpload() {
- let upload=new cloudinary.UploadStream()
- cloudinary
+ //let upload=new cloudinary.UploadStream()
+ cloudinary.v2.image()
 }
-  export default ()=>{
+  export default function getCloudinary() {
     return cloudinary
   }

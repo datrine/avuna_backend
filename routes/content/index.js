@@ -12,7 +12,19 @@ import {
   uploadLightContent,
 } from "../../aws/s3/uploadparts.js";
 import { nanoid } from "nanoid";
-const upload = multer();
+import { unlink } from "node:fs/promises";
+import getCloudinary from "../../cloudinary/index.js";
+let cloudinary = getCloudinary();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./tmp/my-uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + file.originalname);
+  },
+});
+const upload = multer({ storage });
 const router = Router();
 
 router.post(
@@ -31,6 +43,20 @@ router.post(
       let files = req.files;
       let media = [];
       for (const fl of files) {
+        
+        let uploadRes;
+        if (file.size < 100000000) {
+          uploadRes = await cloudinary.v2.uploader.upload(file.path);
+        } else {
+          uploadRes = await cloudinary.v2.uploader.upload_large(file.path);
+        }
+        try {
+          await unlink(file.path);
+        } catch (error) {
+          console.log({ error });
+        }
+        media.push(uploadRes);
+        /*
         let { buffer, originalname: filename, mimetype, size } = fl;
         let ext = filename.split(".")[1];
         let key = nanoid() + `.${ext}`;
@@ -59,7 +85,7 @@ router.post(
           };
           media.push(mediaItem);
         };
-        await processUpload({ buffer, key });
+        await processUpload({ buffer, key });*/
       }
       let resDB = await addContent({
         creatorID: accountID,
