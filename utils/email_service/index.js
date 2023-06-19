@@ -28,7 +28,7 @@ let sendEmail = async ({ recipient, locals, template }) => {
       subject,
       html,
       to: recipient,
-      from: "info@datrisoft.com",
+      from: "trinitietp@gmail.com",
     });
     /*  const email = new Email({
       message: {

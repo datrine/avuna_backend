@@ -318,4 +318,6 @@ knex.schema.hasTable("payments").then(function (exists) {
     });
   }
 });
-export default knex;
+export default ()=>{
+  return knex
+};

@@ -1,6 +1,7 @@
 import logger from "../../utils/logger.js";
-import knex from "./conn.js";
 import { DateTime } from "luxon";
+import fn  from "./conn.js";
+let knex=fn()
 
 /**
  *

@@ -1,6 +1,7 @@
 import logger from "../../utils/logger.js";
-import knex from "./conn.js";
 import { v4 as uuidV4 } from "uuid";
+import fn  from "./conn.js";
+let knex=fn()
 import { checkPermissionMySQL } from "./rbac.js";
 
 /**

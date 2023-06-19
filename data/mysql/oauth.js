@@ -1,5 +1,6 @@
 import logger from "../../utils/logger.js";
-import knex from "./conn.js";
+import fn  from "./conn.js";
+let knex=fn()
 
 /**
  *

@@ -1,7 +1,8 @@
 import logger from "../../utils/logger.js";
-import knex from "./conn.js";
 import { v4 as uuidV4 } from "uuid";
 import { DateTime, Interval } from "luxon";
+import fn  from "./conn.js";
+let knex=fn()
 /**
  *
  * @param {object} regObj

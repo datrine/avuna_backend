@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
-import knex from "./conn.js";
+import fn  from "./conn.js";
+let knex=fn()
 /**
  * @param {object} obj
  * @param {object} obj.cart
