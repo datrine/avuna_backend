@@ -51,7 +51,7 @@ router.post(
         } catch (error) {
           console.log({ error });
         }
-        prof_pic_info = await processProfilePic(file);
+        prof_pic_info =uploadRes //await processProfilePic(file);
       }
       let { f_name, l_name, sex, age_range, country } = body;
       let selfAccount = req.session.self.account;
