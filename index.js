@@ -134,6 +134,6 @@ app.use(
 app.get("/",(req,res)=>{
   res.json({status:"cool. Working"})
 })
-server.listen(8080, () => {
+server.listen(process.env.PORT || 5000, () => {
   console.log("Listening on ", server.address().port);
 });
