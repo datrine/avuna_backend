@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  accountID       String?   @db.Char(36)
+  email           String    @id @db.VarChar(255)
+  pass_hash       String?   @db.VarChar(100)
+  state           Json?
+  isEmailVerified Boolean?  @default(false)
+  account_type    String?   @db.VarChar(255)
+  roleIDs         Json?
+  createdAt       DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime? @default(now()) @db.Timestamp(0)
+  profile Profile?
+
+  @@unique([accountID])
+}
+
+model Business {
+  businessID String    @id @db.VarChar(255)
+  name       String?   @db.VarChar(255)
+  sector     String?   @db.VarChar(255)
+  size       String?   @db.VarChar(255)
+  creatorID  String?   @db.VarChar(255)
+  phone_num  Decimal?  @db.Decimal(8, 2)
+  createdAt  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Cart {
+  cartID       String    @id @db.VarChar(255)
+  accountID    String?   @db.VarChar(255)
+  price        Decimal?  @db.Decimal(8, 2)
+  cart         Json?
+  state        Json?
+  stateHistory Json?
+  createdAt    DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Content {
+  contentID      String       @id @db.VarChar(255)
+  courseID       String?      @db.VarChar(255)
+  courseCategory String?      @db.VarChar(255)
+  title          String?      @db.VarChar(255)
+  desc           String?      @db.VarChar(255)
+  media          Json?
+  creatorID      String?      @db.VarChar(255)
+  mode           ContentMode?
+  createdAt      DateTime?    @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime?    @default(now()) @db.Timestamp(0)
+}
+
+model Course {
+  courseID      String             @id @db.VarChar(255)
+  category      String?            @db.VarChar(255)
+  code          String?            @unique(map: "courses_code_unique") @db.VarChar(255)
+  title         String?            @db.VarChar(255)
+  desc          String?            @db.VarChar(255)
+  state         Json?
+  price         Decimal?           @db.Decimal(8, 2)
+  accessType    CoursesAccessType?
+  isCertifiable Boolean?
+  creatorID     String?            @db.VarChar(255)
+  editHistory   Json?
+  createdAt     DateTime?          @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime?          @default(now()) @db.Timestamp(0)
+  media         Json?
+}
+
+model Enrollment {
+  enrollmentID String    @id @db.VarChar(255)
+  accountID    String?   @db.VarChar(255)
+  courseID     String?   @db.VarChar(255)
+  paymentID    String?   @db.VarChar(255)
+  cartID       String?   @db.VarChar(255)
+  state        Json?
+  stateHistory Json?
+  start        DateTime? @db.Timestamp(0)
+  end          DateTime? @db.Timestamp(0)
+  createdAt    DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model LoginSession {
+  sessID       String    @id @db.Char(36)
+  clientID     String?   @db.Char(36)
+  accountID    String?   @db.VarChar(255)
+  state        Json?
+  lastSessID   String?   @db.VarChar(255)
+  duration     Float?
+  factors_info Json?
+  request_info Json?
+  started_on   DateTime? @db.Timestamp(0)
+  renewed_on   DateTime? @db.Timestamp(0)
+  end_by       DateTime? @db.Timestamp(0)
+  createdAt    DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Payment {
+  paymentID    String    @id @db.VarChar(255)
+  accountID    String?   @db.VarChar(255)
+  referenceID  String?   @db.VarChar(255)
+  itemID       String?   @db.VarChar(255)
+  platform     String?   @default("paystack") @db.VarChar(255)
+  amount       Decimal?  @db.Decimal(8, 2)
+  state        Json?
+  stateHistory Json?
+  createdAt    DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Permission {
+  permissionID    String    @id @db.VarChar(255)
+  permission      String?   @unique(map: "permissions_permission_unique") @db.VarChar(255)
+  permissionLabel String?   @db.VarChar(255)
+  permissionDesc  String?   @db.Text
+  creatorID       String?   @db.VarChar(255)
+  scopeIDs        Json?
+  createdAt       DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Preference {
+  accountID   String    @id @db.VarChar(255)
+  preferences Json?
+  createdAt   DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model QuizSession {
+  quizSessionID  String    @id @db.VarChar(255)
+  courseID       String?   @db.VarChar(255)
+  contentID      String?   @db.VarChar(255)
+  title          String?   @db.VarChar(255)
+  desc           String?   @db.VarChar(255)
+  durationMode   String?   @db.VarChar(255)
+  options        Json?
+  numOfQuestions String?   @db.VarChar(255)
+  questionIDs    Json?
+  creatorID      String?   @db.VarChar(255)
+  state          Json?
+  examinees      Json?
+  stop           DateTime? @db.Timestamp(0)
+  createdAt      DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Quiz {
+  quizID    String    @id @db.VarChar(255)
+  courseID  String?   @db.VarChar(255)
+  contentID String?   @db.VarChar(255)
+  question  String?   @db.VarChar(255)
+  options   Json?
+  answer    String?   @db.VarChar(255)
+  creatorID String?   @db.VarChar(255)
+  createdAt DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt DateTime? @default(now()) @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Rating {
+  ratingID  String       @db.VarChar(255)
+  contentID String?      @db.VarChar(255)
+  rater     String?      @db.VarChar(255)
+  stars     Decimal?     @db.Decimal(8, 2)
+  desc      String?      @db.VarChar(255)
+  media     Json?
+  mode      RatingMode?
+  createdAt DateTime?    @default(now()) @db.Timestamp(0)
+  updatedAt DateTime?    @default(now()) @db.Timestamp(0)
+
+  @@unique([ratingID])
+}
+
+model Role {
+  roleID    String    @id @db.VarChar(255)
+  role      String?   @unique(map: "roles_role_unique") @db.VarChar(255)
+  roleLabel String?   @db.VarChar(255)
+  roleDesc  String?   @db.Text
+  scopeIDs  Json?
+  creatorID String?   @db.VarChar(255)
+  createdAt DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model Scope {
+  scopeID    String    @id @db.VarChar(255)
+  scope      String?   @db.VarChar(255)
+  scopeLabel String?   @db.VarChar(255)
+  scopeDesc  String?   @db.VarChar(255)
+  creatorID  String?   @db.VarChar(255)
+  createdAt  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime? @default(now()) @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model TempToken {
+  tokenType  String?   @db.VarChar(255)
+  token      String   @unique(map: "temp_tokens_token_unique") @db.VarChar(255)
+  scope      String?   @db.VarChar(255)
+  recipient  String?   @db.VarChar(255)
+  ttl        Int?
+  expiresAt  DateTime? @db.Timestamp(0)
+  state      String?   @db.VarChar(255)
+  verifiedAt DateTime? @db.Timestamp(0)
+  createdAt  DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime? @default(now()) @db.Timestamp(0)
+
+  @@unique([token])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tokens {
+  sessID       String?   @db.Char(36)
+  clientID     String   @unique(map: "tokens_clientid_unique") @db.Char(36)
+  accessToken  String   @db.VarChar(255)
+  refreshToken String   @db.VarChar(255)
+  createdAt    DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime? @default(now()) @db.Timestamp(0)
+
+  @@unique([accessToken])
+}
+
+model Profile {
+  account Account? @relation(references: [accountID],fields: [accountID])
+  accountID     String         @id @db.VarChar(255)
+  f_name        String?        @db.VarChar(255)
+  l_name        String?        @db.VarChar(255)
+  sex           Gender?
+  age_range     String?        @db.VarChar(255)
+  country       String?        @db.VarChar(255)
+  createdAt     DateTime?      @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime?      @default(now()) @db.Timestamp(0)
+  prof_pic_info Json?
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum RatingMode {
+  publish
+  draft
+}
+
+enum ContentMode {
+  publish
+  draft
+}
+
+enum CoursesAccessType {
+  full_free
+  triable
+  full_paid
+}

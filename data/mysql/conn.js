@@ -13,7 +13,6 @@ const knex = knexJs({
     database:DB_NAME,
   },
 });
-
 knex.schema.hasTable("accounts").then(function (exists) {
   if (!exists) {
     return knex.schema.createTable("accounts", function (t) {
