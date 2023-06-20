@@ -30,7 +30,6 @@ app.use(
     cookie: { secure: true },
   })
 );
-
 app.get(`/video/partial`, async (req, res, next) => {
   let range = req.headers["range"];
   console.log(range)
@@ -132,6 +131,9 @@ app.use(
   },
   allRouter
 );
+app.get("/",(req,res)=>{
+  res.json({status:"cool. Working"})
+})
 server.listen(8080, () => {
   console.log("Listening on ", server.address().port);
 });
