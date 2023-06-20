@@ -1,12 +1,24 @@
 import { Router } from "express";
 import { editProfile } from "../../../actions/account_mgt.js";
 import multer from "multer";
-import { nanoid } from "nanoid";
 import {
   uploadLightContent,
   uploadHeavyContent,
 } from "../../../aws/s3/uploadparts.js";
-const upload = multer();
+import getCloudinary from "../../../cloudinary/index.js";
+let cloudinary = getCloudinary();
+import { nanoid } from "nanoid";
+import { unlink } from "node:fs/promises";
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./tmp/my-uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + file.originalname);
+  },
+});
+const upload = multer({ storage });
 const router = Router();
 
 router.get("/", async (req, res, next) => {
@@ -26,6 +38,19 @@ router.post(
 
       let prof_pic_info;
       if (file) {
+        
+        
+        let uploadRes;
+        if (file.size < 100000000) {
+          uploadRes = await cloudinary.v2.uploader.upload(file.path);
+        } else {
+          uploadRes = await cloudinary.v2.uploader.upload_large(file.path);
+        }
+        try {
+          await unlink(file.path);
+        } catch (error) {
+          console.log({ error });
+        }
         prof_pic_info = await processProfilePic(file);
       }
       let { f_name, l_name, sex, age_range, country } = body;

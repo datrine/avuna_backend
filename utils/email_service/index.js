@@ -28,7 +28,7 @@ let sendEmail = async ({ recipient, locals, template }) => {
       subject,
       html,
       to: recipient,
-      from: "trinitietp@gmail.com",
+      from: "topeomoalabi@gmail.com",
     });
     /*  const email = new Email({
       message: {
@@ -44,6 +44,7 @@ let sendEmail = async ({ recipient, locals, template }) => {
     });*/
   } catch (error) {
     console.log(error);
+    throw error
   }
 };
 export { sendEmail };
